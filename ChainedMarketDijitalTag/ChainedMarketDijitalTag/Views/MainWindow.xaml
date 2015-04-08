@@ -1,0 +1,99 @@
+﻿<Window x:Class="ChainedMarketDijitalTag.Views.MainWindow" 
+        x:Name="RootWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:Views="clr-namespace:ChainedMarketDijitalTag.Views" 
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:wpfsl="http://schemas.softarcs.com/wpfsmartlibrary"
+		WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Background="Gray"
+        Title="PriceCenter" 
+        WindowState="Maximized">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/WPFSmartLibraryLight35;component/ResourceDictionaries/CommonRD.xaml" />
+                <ResourceDictionary Source="../ResourceDictionaries/LoginDialogRD.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <ei:CallMethodAction TargetObject="{Binding}" MethodName="Initialize" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Margin="4" IsEnabled="{Binding IsReady}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="300" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.Row="0" Margin="2">
+            <UniformGrid Columns="2">
+                
+                <TextBlock Text="Hoş Geldiniz" VerticalAlignment="Center" Margin="2" />
+
+                <Button x:Name="btnLock" Background="AliceBlue" Height="20" Width="50" Content="LogOut" Click="btnLock_Click" />
+
+            </UniformGrid>
+
+            <Views:UpdateInfoView x:Name="UpdateInfoViewIstance" VerticalAlignment="Top" />
+
+        </StackPanel>
+
+        <TabControl Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0">
+
+            <TabItem Header="Seçili Şube İşlemleri">
+                <Views:MarketOperationsView x:Name="MarketOperationsViewIstance" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0"
+                DataContext="{Binding ElementName=UpdateInfoViewIstance, Path=DataContext}" />
+            </TabItem>
+
+            <TabItem Header="Aylık Fiyat Değişimi">
+                <Views:MonthlyPriceView x:Name="MonthlyPriceViewIstance" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0"
+                DataContext="{Binding ElementName=UpdateInfoViewIstance, Path=DataContext}" />
+            </TabItem>
+            <TabItem Header="Yıllık Fiyat Değişimi">
+                <Views:YearlyPriceView x:Name="YearlyPriceViewInstance" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0"
+                DataContext="{Binding ElementName=UpdateInfoViewIstance, Path=DataContext}" />
+            </TabItem>
+            <TabItem Header="Bölgesel Fiyat Değişimi">
+                <Views:RegionalPriceView x:Name="RegionalPriceViewInstance" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0"
+                DataContext="{Binding ElementName=UpdateInfoViewIstance, Path=DataContext}" />
+            </TabItem>
+
+        </TabControl>
+
+        <TextBlock Text="Uygulama İşlemleri :" Grid.Column="0" Grid.Row="1" />
+        <TextBox Grid.Column="0" Grid.Row="2" Text="{Binding AppLogs}" IsReadOnly="True" Margin="2" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+
+        <TextBlock Text="Market İşlemleri :" Grid.Column="1" Grid.Row="1" />
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding MarketTradeLogs}" IsReadOnly="True" Margin="2" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+
+        <TextBlock Text="Ürün İşlemleri :" Grid.Column="2" Grid.Row="1" />
+        <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding OrderLogs}" IsReadOnly="True" Margin="2" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+
+        <wpfsl:SmartLoginOverlay x:Name="SmartLoginOverlayControl"
+										 FullSpan="On"
+										 IsUserOptionAvailable="True"
+										 UserName="{Binding UserName}"
+										 Password="{Binding Password}"
+										 UserImageSource="{Binding UserImageSource}"
+										 AdditionalSystemInfo="Login"
+										 Command="{Binding SubmitCommand}"
+										 CommandParameter="{Binding RelativeSource={RelativeSource Self} }" />
+
+
+    </Grid>
+</Window>
+
