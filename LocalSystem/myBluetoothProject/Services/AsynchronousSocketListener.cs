@@ -16,31 +16,35 @@ namespace myBluetoothProject.Services
     public class AsynchronousSocketListener
     {
         // Thread signal for tcp server
-        public static ManualResetEvent allDone = new ManualResetEvent(false);
+        private ManualResetEvent allDone = new ManualResetEvent(false);
+
+        private Socket listener;
 
         public AsynchronousSocketListener()
         {
         }
 
-        public static void StartListening()
+        public void StartListening()
         {
-            // Data buffer for incoming data.
-            byte[] bytes = new Byte[1024];
-
-            // Establish the local endpoint for the socket.
-            // The DNS name of the computer
-            // running the listener is "host.contoso.com".
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
-
-            // Create a TCP/IP socket.
-            Socket listener = new Socket(AddressFamily.InterNetwork,
-                SocketType.Stream, ProtocolType.Tcp);
-
-            // Bind the socket to the local endpoint and listen for incoming connections.
             try
             {
+                // Data buffer for incoming data.
+                byte[] bytes = new Byte[1024];
+
+                // Establish the local endpoint for the socket.
+                // The DNS name of the computer
+                // running the listener is "host.contoso.com".
+                IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
+
+                // Create a TCP/IP socket.
+                listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                LingerOption lo = new LingerOption(false, 0);
+                listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lo);
+
+                // Bind the socket to the local endpoint and listen for incoming connections.
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
 
@@ -65,7 +69,20 @@ namespace myBluetoothProject.Services
             }
         }
 
-        public static void AcceptCallback(IAsyncResult ar)
+        public void CloseSocketConnection()
+        {
+            try
+            {
+                listener.Shutdown(SocketShutdown.Both);
+                listener.Disconnect(true);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.
             allDone.Set();
@@ -81,8 +98,10 @@ namespace myBluetoothProject.Services
                 new AsyncCallback(ReadCallback), state);
         }
 
-        public static void ReadCallback(IAsyncResult ar)
+        private void ReadCallback(IAsyncResult ar)
         {
+            Msg.AppClean.Publish();
+
             String content = String.Empty;
 
             // Retrieve the state object and the handler socket
@@ -133,7 +152,6 @@ namespace myBluetoothProject.Services
                         type = UpdateType.Unknown;
 
                     UpdateEventArgs newEvent = new UpdateEventArgs(type,infoDetails[1],infoDetails[2],infoDetails[3]);
-
                     
 
                     string requestResult = "FAILED";
@@ -149,7 +167,7 @@ namespace myBluetoothProject.Services
             }
         }
 
-        private static void Send(Socket handler, String data)
+        private void Send(Socket handler, String data)
         {
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Encoding.ASCII.GetBytes(data);
@@ -159,7 +177,7 @@ namespace myBluetoothProject.Services
                 new AsyncCallback(SendCallback), handler);
         }
 
-        private static void SendCallback(IAsyncResult ar)
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {

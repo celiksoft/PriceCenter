@@ -33,7 +33,7 @@ namespace myBluetoothProject
         {
             startButton.Enabled = false;
             UpdateUI("Market server is started");
-            Thread tcpServerThread = new Thread(new ThreadStart(AsynchronousSocketListener.StartListening));
+            Thread tcpServerThread = new Thread(new ThreadStart(socketListener.StartListening));
             tcpServerThread.Start();
         }
 
@@ -61,6 +61,7 @@ namespace myBluetoothProject
         private IList<Device> devices;
         private ISenderBluetoothService service;
         private bool ServerRunning = false;
+        private AsynchronousSocketListener socketListener;
 
         // Thread signal for tcp server
         //public static ManualResetEvent allDone = new ManualResetEvent(false);
@@ -79,15 +80,20 @@ namespace myBluetoothProject
             this.server = server;
             service = new SenderBluetoothService();
             devices = new List<Device>();
+            socketListener = new AsynchronousSocketListener();
             Messenger<Msg>.Default.AddHandler<string>(Msg.AppLog,UpdateUI);
+            Messenger<Msg>.Default.AddHandler(Msg.AppClean, CleanLogs);
+            this.FormClosed += CloseServer;
         }
 
         public CentralServerForm()
         {
             InitializeComponent();
             service = new SenderBluetoothService();
+            socketListener = new AsynchronousSocketListener();
             devices = new List<Device>();
             Messenger<Msg>.Default.AddHandler<string>(Msg.AppLog, UpdateUI);
+            this.FormClosed += CloseServer;
         }
 
         #endregion
@@ -184,6 +190,11 @@ namespace myBluetoothProject
             Invoke(del);
         }
 
+        private void CleanLogs()
+        {
+            activityBox.Clear();
+        }
+
         private void Initialize()
         {
             UpdateUI("Market server is started");
@@ -269,6 +280,11 @@ namespace myBluetoothProject
                     UpdateUI("A problem occured, Details: " + ex.Message);
                 }
             }
+        }
+
+        public void CloseServer(object sender,EventArgs args)
+        {
+            socketListener.CloseSocketConnection();
         }
 
         // tcp server-client region

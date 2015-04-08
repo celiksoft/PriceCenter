@@ -8,5 +8,6 @@ namespace myBluetoothProject.Messenger
     public enum Msg
     {
         AppLog,
+        AppClean,
     }
 }
