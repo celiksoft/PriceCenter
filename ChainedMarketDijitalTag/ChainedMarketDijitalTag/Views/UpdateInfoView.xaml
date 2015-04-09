@@ -13,24 +13,39 @@
         <UniformGrid Columns="2">
 
             <TextBlock Text="Ülke seçiniz :" VerticalAlignment="Center" Margin="2" />
-            <ComboBox ItemsSource="{Binding Countries}" DisplayMemberPath="Symbol"
-                        SelectedItem="{Binding  ElementName=UpdateInfoViewIstance, Path=DataContext.SelectedInstrument, Mode=TwoWay}" Margin="2" />
+            <ComboBox ItemsSource="{Binding Countries}" DisplayMemberPath="Name"
+                       SelectedItem="{Binding SelectedCountry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
             <TextBlock Text="Şehir seçiniz :" VerticalAlignment="Center" Margin="2" />
-            <ComboBox ItemsSource="{Binding Cities}" DisplayMemberPath="Symbol"
-                        SelectedItem="{Binding  ElementName=UpdateInfoViewIstance, Path=DataContext.SelectedInstrument, Mode=TwoWay}" Margin="2" />
+            <ComboBox ItemsSource="{Binding Cities}" DisplayMemberPath="Name"
+                       SelectedItem="{Binding SelectedCity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
             <TextBlock Text="Şube seçiniz :" VerticalAlignment="Center" Margin="2" />
-            <ComboBox ItemsSource="{Binding Locations}" DisplayMemberPath="Symbol"
-                        SelectedItem="{Binding  ElementName=UpdateInfoViewIstance, Path=DataContext.SelectedInstrument, Mode=TwoWay}" Margin="2" />
+            <ComboBox ItemsSource="{Binding MarketBranches}" DisplayMemberPath="Name" SelectedValuePath=""
+                        SelectedItem="{Binding SelectedMarketBranch, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
             <TextBlock Text="Ürün seçiniz :" VerticalAlignment="Center" Margin="2" />
-            <ComboBox ItemsSource="{Binding Products}" DisplayMemberPath="Symbol"
-                        SelectedItem="{Binding  ElementName=UpdateInfoViewIstance, Path=DataContext.SelectedInstrument, Mode=TwoWay}" Margin="2" />
+            <ComboBox ItemsSource="{Binding Products}" DisplayMemberPath="Name"
+                        SelectedItem="{Binding SelectedProduct, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
-            <TextBlock Text="Bilgi türü seçiniz :" VerticalAlignment="Center" Margin="2" />
+            <!--<TextBlock Text="Bilgi türü seçiniz :" VerticalAlignment="Center" Margin="2" />
             <ComboBox ItemsSource="{Binding InfoTypes}" DisplayMemberPath="Symbol"
-                        SelectedItem="{Binding  ElementName=UpdateInfoViewIstance, Path=DataContext.SelectedInstrument, Mode=TwoWay}" Margin="2" />
+                        SelectedItem="{Binding  ElementName=UpdateInfoViewIstance, Path=DataContext.SelectedInstrument, Mode=TwoWay}" Margin="2" />-->
+
+            <TextBlock Text="Yeni fiyat :" />
+            <TextBox Text="{Binding LimitPrice, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
+
+            <!--<Control Tag="PlaceHolder" />
+            <Button  IsEnabled="{Binding CanUpdate}">
+                <Button.Content>
+                    <TextBlock Margin="0" FontSize="8"> UPDATE</TextBlock>
+                </Button.Content>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <ei:CallMethodAction TargetObject="{Binding}" MethodName="UpdateProductInfo" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>-->
 
         </UniformGrid>
 

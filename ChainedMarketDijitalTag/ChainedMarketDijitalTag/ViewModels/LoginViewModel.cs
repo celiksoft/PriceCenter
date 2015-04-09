@@ -11,6 +11,7 @@ using SoftArcs.WPFSmartLibrary.MVVMCore;
 using SoftArcs.WPFSmartLibrary.SmartUserControls;
 
 using ChainedMarketDijitalTag.Models;
+using ChainedMarketDijitalTag.Messenger;
 
 namespace ChainedMarketDijitalTag.ViewModels
 {
@@ -36,6 +37,8 @@ namespace ChainedMarketDijitalTag.ViewModels
                 //! Remember : ONLY for demonstration purposes I have used a local Collection
                 this.getAllUser();
             }
+
+            Messenger<Msg>.Default.AddHandler<string>(Msg.AppLog, addAppLog);
         }
 
         #endregion // Constructors
@@ -63,6 +66,11 @@ namespace ChainedMarketDijitalTag.ViewModels
         {
             get { return GetValue(() => UserImageSource); }
             set { SetValue(() => UserImageSource, value); }
+        }
+
+        private void addAppLog(string msg)
+        {
+            Msg.AppLog.Publish(msg);
         }
 
         #endregion // Public Properties
@@ -110,6 +118,8 @@ namespace ChainedMarketDijitalTag.ViewModels
             this.userList = new List<User>()
 								 {
 									new User() { UserName="celik", Password="celik1234",
+													 ImageSourcePath = Path.Combine( userImagesPath, "user.png") },
+                                    new User() { UserName="rcelik", Password="1234",
 													 ImageSourcePath = Path.Combine( userImagesPath, "user.png") },
 								 };
         }

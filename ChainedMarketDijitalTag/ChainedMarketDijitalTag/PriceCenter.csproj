@@ -64,6 +64,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\Definitions.cs" />
+    <Compile Include="Helpers\Enumarations.cs" />
+    <Compile Include="Helpers\UpdateEventArgs.cs" />
+    <Compile Include="Messenger\Messenger.cs" />
+    <Compile Include="Messenger\Msg.cs" />
+    <Compile Include="Messenger\MsgExtensions.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\MarketBranch.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\UpdateInfoViewModel.cs" />

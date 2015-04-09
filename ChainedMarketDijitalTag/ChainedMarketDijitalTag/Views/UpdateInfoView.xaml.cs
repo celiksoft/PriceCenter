@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using ChainedMarketDijitalTag.ViewModels;
+
 namespace ChainedMarketDijitalTag.Views
 {
     /// <summary>
@@ -23,6 +25,7 @@ namespace ChainedMarketDijitalTag.Views
         public UpdateInfoView()
         {
             InitializeComponent();
+            DataContext = new UpdateInfoViewModel();
         }
     }
 }
