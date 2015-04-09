@@ -34,9 +34,6 @@ namespace ChainedMarketDijitalTag.ViewModels
                 //! Remember : ONLY for demonstration purposes I have used a local Collection
                 this.getAllUser();
             }
-
-            Messenger<Msg>.Default.AddHandler<string>(Msg.AppLog, addAppLog);
-            addAppLog("App initialized");
         }
 
         public void Initialize()

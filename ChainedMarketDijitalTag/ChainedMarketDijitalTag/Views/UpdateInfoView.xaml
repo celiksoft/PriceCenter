@@ -28,11 +28,10 @@
             <ComboBox ItemsSource="{Binding Products}" DisplayMemberPath="Name"
                         SelectedItem="{Binding SelectedProduct, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
-            <!--<TextBlock Text="Bilgi türü seçiniz :" VerticalAlignment="Center" Margin="2" />
-            <ComboBox ItemsSource="{Binding InfoTypes}" DisplayMemberPath="Symbol"
-                        SelectedItem="{Binding  ElementName=UpdateInfoViewIstance, Path=DataContext.SelectedInstrument, Mode=TwoWay}" Margin="2" />-->
+            <TextBlock Text="Bilgi türü seçiniz :" VerticalAlignment="Center" Margin="2" />
+            <ComboBox ItemsSource="{Binding InfoTypes}" SelectedItem="{Binding SelectedSide}" SelectedIndex="0" Margin="2" />
 
-            <TextBlock Text="Yeni fiyat :" />
+            <TextBlock Text="Yeni bilgi :" />
             <TextBox Text="{Binding LimitPrice, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
             <!--<Control Tag="PlaceHolder" />

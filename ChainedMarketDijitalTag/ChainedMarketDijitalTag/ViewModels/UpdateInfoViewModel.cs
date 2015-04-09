@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 using ChainedMarketDijitalTag.Models;
 using ChainedMarketDijitalTag.Helpers;
-using System.Windows.Controls;
-
 using ChainedMarketDijitalTag.Messenger;
 
 namespace ChainedMarketDijitalTag.ViewModels
@@ -28,6 +27,7 @@ namespace ChainedMarketDijitalTag.ViewModels
         private UpdateType m_selectedInfoType;
         private string m_newInfoValue;
         private UpdateEventArgs m_updateEventArgs;
+        private UpdateType m_selectedType;
 
         public UpdateInfoViewModel()
         {
@@ -62,12 +62,12 @@ namespace ChainedMarketDijitalTag.ViewModels
 
             #endregion TestData
 
-            Messenger<Msg>.Default.AddHandler<string>(Msg.AppLog, addAppLog);
-            //Msg.UpdateInfoLog.Publish("Selected Country " + SelectedCountry );
-
             m_contries = new ObservableCollection<Country>();
             m_contries.Add(turkiye);
             m_contries.Add(almanya);
+
+            InfoTypes = new UpdateType[] { UpdateType.Price, UpdateType.Image, UpdateType.Info };
+            Messenger<Msg>.Default.AddHandler(Msg.ClearSession,ClearSession);
 
         }
         public bool CanUpdate
@@ -96,6 +96,8 @@ namespace ChainedMarketDijitalTag.ViewModels
                     m_contries = value;
                     OnPropertyChanged("Countries");
                     OnPropertyChanged("Cities");
+                    OnPropertyChanged("MarketBranches");
+                    OnPropertyChanged("Products");
                 }
             }
         }
@@ -175,11 +177,32 @@ namespace ChainedMarketDijitalTag.ViewModels
                 }
             }
         }
-
+        public UpdateType[] InfoTypes
+        {
+            get;
+            private set;
+        }
+        public UpdateType SelectedType
+        {
+            get { return m_selectedType; }
+            set
+            {
+                if (m_selectedType != value)
+                {
+                    m_selectedType = value;
+                    OnPropertyChanged("SelectedType");
+                }
+            }
+        }
 
         private void addAppLog(string log)
         {
             Msg.AppLog.Publish(log);
+        }
+
+        private void ClearSession()
+        {
+            Countries = new ObservableCollection<Country>();
         }
 
         // Declare the event 

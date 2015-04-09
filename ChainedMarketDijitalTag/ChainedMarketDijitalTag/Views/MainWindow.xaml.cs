@@ -35,6 +35,7 @@ namespace ChainedMarketDijitalTag.Views
         private void btnLock_Click(object sender, RoutedEventArgs e)
         {
             this.SmartLoginOverlayControl.Lock();
+            DataContext = new MainViewModel();
         }
     }
 }

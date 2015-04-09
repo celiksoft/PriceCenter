@@ -10,5 +10,6 @@ namespace ChainedMarketDijitalTag.Messenger
         AppLog,
         AppClean,
         UpdateInfoLog,
+        ClearSession,
     }
 }
