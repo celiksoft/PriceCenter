@@ -26,31 +26,15 @@ namespace ChainedMarketDijitalTag.Views
     /// </summary>
     public partial class MainWindow
     {
-        #region Fields
-
-        public LoginViewModel ViewModel;
-
-        #endregion
-
-        #region Constructor
-
         public MainWindow()
         {
             InitializeComponent();
-
-            this.ViewModel = new LoginViewModel();
-            this.DataContext = this.ViewModel;
+            DataContext = new MainViewModel();
         }
-
-        #endregion
-
-        #region Event handler
 
         private void btnLock_Click(object sender, RoutedEventArgs e)
         {
             this.SmartLoginOverlayControl.Lock();
         }
-
-        #endregion
     }
 }
