@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.IO;
+using System.Collections.ObjectModel;
 
 using ChainedMarketDijitalTag.Messenger;
 using ChainedMarketDijitalTag.Helpers;
@@ -34,6 +35,44 @@ namespace ChainedMarketDijitalTag.ViewModels
                 //! Remember : ONLY for demonstration purposes I have used a local Collection
                 this.getAllUser();
             }
+
+            #region TestData
+            Product elma = new Product(1, "ELMA", "MANAV");
+            Product kavurma = new Product(1, "KAVURMA", "KASAP");
+
+            MarketBranch pendik = new MarketBranch("PENDİK", "TÜRKİYE", "İSTANBUL");
+            MarketBranch yenisehir = new MarketBranch("YENİŞEHİR", "TÜRKİYE", "BURSA");
+
+            MarketBranch hartz = new MarketBranch("HARTZ", "ALMANYA", "BERLİN");
+
+            pendik.Products.Add(elma);
+            pendik.Products.Add(kavurma);
+            yenisehir.Products.Add(elma);
+            hartz.Products.Add(elma);
+
+            City bursa = new City("BURSA");
+            City istanbul = new City("İSTANBUL");
+            City berlin = new City("BERLİN");
+
+            bursa.MarketBranches.Add(yenisehir);
+            istanbul.MarketBranches.Add(pendik);
+            berlin.MarketBranches.Add(hartz);
+
+            Country turkiye = new Country("TÜRKİYE");
+            Country almanya = new Country("ALMANYA");
+
+            turkiye.Cities.Add(bursa);
+            turkiye.Cities.Add(istanbul);
+            almanya.Cities.Add(berlin);
+
+            #endregion TestData
+
+            m_contries = new ObservableCollection<Country>();
+            m_contries.Add(turkiye);
+            m_contries.Add(almanya);
+
+            InfoTypes = new UpdateType[] { UpdateType.Price, UpdateType.Image, UpdateType.Info };
+
         }
 
         public void Initialize()
@@ -205,16 +244,159 @@ namespace ChainedMarketDijitalTag.ViewModels
 
         #endregion
 
-        //// Declare the event 
-        //public event PropertyChangedEventHandler PropertyChanged;
-        //// Create the OnPropertyChanged method to raise the event 
-        //protected void OnPropertyChanged(string name)
-        //{
-        //    PropertyChangedEventHandler handler = PropertyChanged;
-        //    if (handler != null)
-        //    {
-        //        handler(this, new PropertyChangedEventArgs(name));
-        //    }
-        //}
+        #region UpdateInfoVM
+
+        private ObservableCollection<Country> m_contries;
+        private bool m_canUpdate;
+        private Country m_selectedCountry = new Country();
+        private City m_selectedCity = new City();
+        private MarketBranch m_selectedMarketBranch = new MarketBranch();
+        private Product m_selectedProduct = new Product();
+        private string m_updateInfoValue;
+        private UpdateEventArgs m_updateEventArgs;
+        private UpdateType m_selectedType;
+
+        public string UpdateInfoValue
+        {
+            get { return m_updateInfoValue; }
+            set
+            {
+                if (m_updateInfoValue != value)
+                {
+                    m_updateInfoValue = value;
+                    OnPropertyChanged("UpdateInfoValue");
+                    OnPropertyChanged("CanUpdate");
+                }
+            }
+        }
+
+        public bool CanUpdate
+        {
+            get { return m_canUpdate; }
+            set
+            {
+                if (m_canUpdate != value)
+                {
+                    m_canUpdate = value;
+                    OnPropertyChanged("CanUpdate");
+                }
+            }
+        }
+
+        public ObservableCollection<Country> Countries
+        {
+            get
+            {
+                return m_contries;
+            }
+            set
+            {
+                if (m_contries != value)
+                {
+                    m_contries = value;
+                    OnPropertyChanged("Countries");
+                    OnPropertyChanged("Cities");
+                    OnPropertyChanged("MarketBranches");
+                    OnPropertyChanged("Products");
+                }
+            }
+        }
+
+        public ObservableCollection<City> Cities
+        {
+            get
+            {
+                return m_selectedCountry.Cities;
+            }
+        }
+
+        public ObservableCollection<MarketBranch> MarketBranches
+        {
+            get { return m_selectedCity.MarketBranches; }
+        }
+
+        public ObservableCollection<Product> Products
+        {
+            get { return m_selectedMarketBranch.Products; }
+        }
+
+        public Country SelectedCountry
+        {
+            get { return m_selectedCountry; }
+            set
+            {
+                if (m_selectedCountry != value && value != null)
+                {
+                    m_selectedCountry = value;
+                    OnPropertyChanged("SelectedCountry");
+                    OnPropertyChanged("Cities");
+                    OnPropertyChanged("MarketBranches");
+                    OnPropertyChanged("Products");
+                }
+            }
+        }
+
+        public City SelectedCity
+        {
+            get { return m_selectedCity; }
+            set
+            {
+                if (m_selectedCity != value && value != null)
+                {
+                    m_selectedCity = value;
+                    OnPropertyChanged("SelectedCity");
+                    OnPropertyChanged("Products");
+                    OnPropertyChanged("MarketBranches");
+                }
+            }
+        }
+
+        public MarketBranch SelectedMarketBranch
+        {
+            get { return m_selectedMarketBranch; }
+            set
+            {
+                if (m_selectedMarketBranch != value && value != null)
+                {
+                    m_selectedMarketBranch = value;
+                    OnPropertyChanged("SelectedMarketBranch");
+                    OnPropertyChanged("Products");
+                }
+            }
+        }
+
+        public Product SelectedProduct
+        {
+            get { return m_selectedProduct; }
+            set
+            {
+                if (m_selectedProduct != value && value != null)
+                {
+                    m_selectedProduct = value;
+                    OnPropertyChanged("SelectedProduct");
+                }
+            }
+        }
+
+        public UpdateType[] InfoTypes
+        {
+            get;
+            private set;
+        }
+
+        public UpdateType SelectedType
+        {
+            get { return m_selectedType; }
+            set
+            {
+                if (m_selectedType != value)
+                {
+                    m_selectedType = value;
+                    OnPropertyChanged("SelectedType");
+                }
+            }
+        }
+
+        #endregion 
     }
 }

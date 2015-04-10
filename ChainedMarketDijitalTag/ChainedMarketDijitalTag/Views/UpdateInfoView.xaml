@@ -32,7 +32,7 @@
             <ComboBox ItemsSource="{Binding InfoTypes}" SelectedItem="{Binding SelectedSide}" SelectedIndex="0" Margin="2" />
 
             <TextBlock Text="Yeni bilgi :" />
-            <TextBox Text="{Binding LimitPrice, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
+            <TextBox Text="{Binding UpdateInfoValue, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
             <!--<Control Tag="PlaceHolder" />
             <Button  IsEnabled="{Binding CanUpdate}">

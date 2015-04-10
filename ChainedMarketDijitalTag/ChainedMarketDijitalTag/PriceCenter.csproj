@@ -75,7 +75,6 @@
     <Compile Include="Models\MarketBranch.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="ViewModels\UpdateInfoViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MarketOperationsView.xaml.cs">
       <DependentUpon>MarketOperationsView.xaml</DependentUpon>

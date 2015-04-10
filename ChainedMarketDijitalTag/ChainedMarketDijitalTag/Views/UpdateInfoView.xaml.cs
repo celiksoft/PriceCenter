@@ -25,7 +25,6 @@ namespace ChainedMarketDijitalTag.Views
         public UpdateInfoView()
         {
             InitializeComponent();
-            DataContext = new UpdateInfoViewModel();
         }
     }
 }
