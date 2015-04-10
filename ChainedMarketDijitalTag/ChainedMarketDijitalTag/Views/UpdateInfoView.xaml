@@ -34,17 +34,17 @@
             <TextBlock Text="Yeni bilgi :" />
             <TextBox Text="{Binding UpdateInfoValue, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
-            <!--<Control Tag="PlaceHolder" />
+            <Control Tag="PlaceHolder" />
             <Button  IsEnabled="{Binding CanUpdate}">
                 <Button.Content>
-                    <TextBlock Margin="0" FontSize="8"> UPDATE</TextBlock>
+                    <TextBlock Margin="0" FontSize="8"> UPDATE INFO </TextBlock>
                 </Button.Content>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <ei:CallMethodAction TargetObject="{Binding}" MethodName="UpdateProductInfo" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-            </Button>-->
+            </Button>
 
         </UniformGrid>
 

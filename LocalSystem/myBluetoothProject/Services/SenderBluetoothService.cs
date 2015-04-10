@@ -32,7 +32,7 @@ namespace myBluetoothProject.Services
         {
             // this guid is random, only need to match in Sender & Receiver
             // this is like a "key" for the connection!
-            _serviceClassId = new Guid(Definitions.OnRequestGUID);
+            _serviceClassId = new Guid(Definitions.OnMarketBranchRequestGUID);
         }
 
         /// <summary>

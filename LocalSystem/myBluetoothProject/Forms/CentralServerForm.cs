@@ -37,22 +37,6 @@ namespace myBluetoothProject
             tcpServerThread.Start();
         }
 
-        #region UnhandledEvents;
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void activityBox_TextChanged(object sender, EventArgs e) { }
-
-        #endregion;
-
         #endregion
 
         #region Fields
@@ -83,7 +67,7 @@ namespace myBluetoothProject
             socketListener = new AsynchronousSocketListener();
             Messenger<Msg>.Default.AddHandler<string>(Msg.AppLog,UpdateUI);
             Messenger<Msg>.Default.AddHandler(Msg.AppClean, CleanLogs);
-            this.FormClosed += CloseServer;
+            this.FormClosed += CloseServer;     // TO-DO: Update : kill asyncrenous socket listener thread
         }
 
         public CentralServerForm()
@@ -93,7 +77,7 @@ namespace myBluetoothProject
             socketListener = new AsynchronousSocketListener();
             devices = new List<Device>();
             Messenger<Msg>.Default.AddHandler<string>(Msg.AppLog, UpdateUI);
-            this.FormClosed += CloseServer;
+            this.FormClosed += CloseServer;    // TO-DO: Update : kill asyncrenous socket listener thread
         }
 
         #endregion
@@ -121,7 +105,7 @@ namespace myBluetoothProject
 
             try
             {
-                string sendDataString = args.Esl + Definitions.OnRequestGUID + dataType + Definitions.OnRequestGUID + args.NewValue + Definitions.OnRequestGUID;
+                string sendDataString = args.Esl + Definitions.OnMarketBranchRequestGUID + dataType + Definitions.OnMarketBranchRequestGUID + args.NewValue + Definitions.OnMarketBranchRequestGUID;
                 byte[] sendDataByte = System.Text.Encoding.UTF8.GetBytes(sendDataString);
 
                 // get authanticated local servers 
@@ -195,19 +179,12 @@ namespace myBluetoothProject
             activityBox.Clear();
         }
 
-        private void Initialize()
-        {
-            UpdateUI("Market server is started");
-            UpdateEventArgs newEventArgs = new UpdateEventArgs(UpdateType.Info, "3.55", "CILEK", "Cilek");
-            UpdateProductInfo(newEventArgs);
-        }
-
         // waiting response thread from local server
         private void ServerConnectThread(object eventArgs)
         {
             UpdateEventArgs args = (UpdateEventArgs)eventArgs;
 
-            Guid responseGuid = new Guid(Definitions.OnResponseGUID);
+            Guid responseGuid = new Guid(Definitions.OnESLResponseGUID);
 
             BluetoothListener BTListener = new BluetoothListener(responseGuid);
             BTListener.Start();
@@ -287,144 +264,22 @@ namespace myBluetoothProject
             socketListener.CloseSocketConnection();
         }
 
-        // tcp server-client region
-        //private void StartListening()
-        //{
-        //    // Data buffer for incoming data.
-        //    byte[] bytes = new Byte[1024];
-
-        //    // Establish the local endpoint for the socket.
-        //    // The DNS name of the computer
-        //    // running the listener is "host.contoso.com".
-        //    IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-        //    IPAddress ipAddress = ipHostInfo.AddressList[0];
-        //    IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
-
-        //    // Create a TCP/IP socket.
-        //    Socket listener = new Socket(AddressFamily.InterNetwork,
-        //        SocketType.Stream, ProtocolType.Tcp);
-
-        //    // Bind the socket to the local endpoint and listen for incoming connections.
-        //    try
-        //    {
-        //        listener.Bind(localEndPoint);
-        //        listener.Listen(100);
-
-        //        while (true)
-        //        {
-        //            // Set the event to nonsignaled state.
-        //            allDone.Reset();
-
-        //            // Start an asynchronous socket to listen for connections.
-        //            Msg.AppLog.Publish("Waiting from price center...");
-        //            listener.BeginAccept(
-        //                new AsyncCallback(AcceptCallback),
-        //                listener);
-
-        //            // Wait until a connection is made before continuing.
-        //            allDone.WaitOne();
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Msg.AppLog.Publish(e.ToString());
-        //    }
-        //}
-
-        //private void AcceptCallback(IAsyncResult ar)
-        //{
-        //    // Signal the main thread to continue.
-        //    allDone.Set();
-
-        //    // Get the socket that handles the client request.
-        //    Socket listener = (Socket)ar.AsyncState;
-        //    Socket handler = listener.EndAccept(ar);
-
-        //    // Create the state object.
-        //    StateObject state = new StateObject();
-        //    state.workSocket = handler;
-        //    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-        //        new AsyncCallback(ReadCallback), state);
-        //}
-
-        //private void ReadCallback(IAsyncResult ar)
-        //{
-        //    String content = String.Empty;
-
-        //    // Retrieve the state object and the handler socket
-        //    // from the asynchronous state object.
-        //    StateObject state = (StateObject)ar.AsyncState;
-        //    Socket handler = state.workSocket;
-
-        //    // Read data from the client socket. 
-        //    int bytesRead = handler.EndReceive(ar);
-
-        //    if (bytesRead > 0)
-        //    {
-        //        // There  might be more data, so store the data received so far.
-        //        state.sb.Append(Encoding.ASCII.GetString(
-        //            state.buffer, 0, bytesRead));
-
-        //        // Check for end-of-file tag. If it is not there, read 
-        //        // more data.
-        //        content = state.sb.ToString();
-        //        if (content.IndexOf("<EOF>") > -1)
-        //        {
-        //            // All the data has been read from the 
-        //            // client. Display it on the console.
-        //            Msg.AppLog.Publish(String.Format("Read {0} bytes from socket. \n Data : {1}",
-        //                content.Length, content));
-
-        //            // Update Request received from price center , connection will begin with local server
-
-        //            Msg.AppLog.Publish();
-
-        //            // parse content and create UpdateEventArgs
-
-        //            string requestResult = "failed";
-
-        //            //Send(handler, requestResult);
-        //        }
-        //        //else
-        //        //{
-        //        //    // Not all data received. Get more.
-        //        //    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-        //        //    new AsyncCallback(ReadCallback), state);
-        //        //}
-        //    }
-        //}
-
-        //private void Send(Socket handler, String data)
-        //{
-        //    // Convert the string data to byte data using ASCII encoding.
-        //    byte[] byteData = Encoding.ASCII.GetBytes(data);
-
-        //    // Begin sending the data to the remote device.
-        //    handler.BeginSend(byteData, 0, byteData.Length, 0,
-        //        new AsyncCallback(SendCallback), handler);
-        //}
-
-        //private void SendCallback(IAsyncResult ar)
-        //{
-        //    try
-        //    {
-        //        // Retrieve the socket from the state object.
-        //        Socket handler = (Socket)ar.AsyncState;
-
-        //        // Complete sending the data to the remote device.
-        //        int bytesSent = handler.EndSend(ar);
-        //        Msg.AppLog.Publish(string.Format("Sent {0} bytes to client.", bytesSent));
-
-        //        handler.Shutdown(SocketShutdown.Both);
-        //        handler.Close();
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Msg.AppLog.Publish(e.ToString());
-        //    }
-        //}
-
         #endregion
+
+        #region UnhandledEvents;
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void activityBox_TextChanged(object sender, EventArgs e) { }
+
+        #endregion;
     }
 }

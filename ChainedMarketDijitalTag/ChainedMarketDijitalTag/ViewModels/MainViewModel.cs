@@ -133,6 +133,42 @@ namespace ChainedMarketDijitalTag.ViewModels
             OrderLogs = m_orderLogs + log + Environment.NewLine;
         }
 
+        private void UpdateProductInfo()
+        {   
+            // evaluete local server from db
+            string localServer;
+            if (m_selectedProduct.Name == "ELMA")
+                localServer = "MANAV";
+            else
+                localServer = "KASAP";
+
+            UpdateEventArgs args = new UpdateEventArgs(m_selectedType, m_updateInfoValue, localServer, m_selectedProduct.Name);
+            var updateMessage = CreateMessage(args);
+
+            // start a connection with market branch and wait request, Tcp client part
+
+
+
+        }
+
+        private string CreateMessage(UpdateEventArgs args)
+        {
+            string updateType;
+
+            if (args.Type == UpdateType.Price)
+                updateType = "0";
+            else if (args.Type == UpdateType.Image)
+                updateType = "1";
+            else if (args.Type == UpdateType.Info)
+                updateType = "2";
+            else
+                updateType = "-1";
+
+            string message = args.LocalServer + Definitions.OnPriceCenterRequestGUID + updateType + Definitions.OnPriceCenterRequestGUID +
+                             args.Esl + Definitions.OnPriceCenterRequestGUID + args.NewValue + Definitions.OnPriceCenterRequestGUID + "<EOF>";
+            return message;
+        }
+
         #region LoginVM
 
         #region Fields

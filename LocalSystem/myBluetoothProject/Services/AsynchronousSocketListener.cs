@@ -100,8 +100,6 @@ namespace myBluetoothProject.Services
 
         private void ReadCallback(IAsyncResult ar)
         {
-            Msg.AppClean.Publish();
-
             String content = String.Empty;
 
             // Retrieve the state object and the handler socket
@@ -125,35 +123,15 @@ namespace myBluetoothProject.Services
                 {
                     // All the data has been read from the 
                     // client. Display it on the console.
-                    Msg.AppLog.Publish(String.Format("Read {0} bytes from socket. \n Data : {1}",
-                        content.Length, content));
+                    Msg.AppLog.Publish(String.Format("Read {0} bytes from socket. \n ", content.Length));
 
-                    // Update Request received from price center , connection will begin with local server
-                    string[] infoDetails = new string[4];
-                    try
-                    {
-                        infoDetails = Regex.Split(content, Definitions.OnRequestGUID);
-                        if(infoDetails.Count() != 4)
-                            throw new Exception();
-                    }
-                    catch (Exception ex)
-                    {
-                        Msg.AppLog.Publish(ex.Message);
-                    }
+                    UpdateEventArgs args = CreateUpdatePackage(content,Definitions.OnPriceCenterRequestGUID);
 
-                    UpdateType type;
-                    if (infoDetails[0] == "0")
-                        type = UpdateType.Price;
-                    else if (infoDetails[0] == "1")
-                        type = UpdateType.Image;
-                    else if (infoDetails[0] == "2")
-                        type = UpdateType.Info;
-                    else
-                        type = UpdateType.Unknown;
+                    // try connect with local server and get response
 
-                    UpdateEventArgs newEvent = new UpdateEventArgs(type,infoDetails[1],infoDetails[2],infoDetails[3]);
-                    
 
+
+                    // send response to price center
                     string requestResult = "FAILED";
 
                     Send(handler, requestResult);
@@ -196,6 +174,28 @@ namespace myBluetoothProject.Services
             {
                 Msg.AppLog.Publish(e.ToString());
             }
+        }
+
+        private UpdateEventArgs CreateUpdatePackage(string content,string key)
+        {
+            string[] allMessage = content.Split(key.ToCharArray());
+
+            var localServer = allMessage[0];
+            var infoType = allMessage[1];
+            var eslName = allMessage[2];
+            var newInfo = allMessage[3];
+
+            UpdateType type;
+            if (infoType == "0")
+                type = UpdateType.Price;
+            else if (infoType == "1")
+                type = UpdateType.Image;
+            else if (infoType == "2")
+                type = UpdateType.Info;
+            else
+                type = UpdateType.Unknown;
+
+            return new UpdateEventArgs(type, newInfo, localServer, eslName);
         }
     }
 }
