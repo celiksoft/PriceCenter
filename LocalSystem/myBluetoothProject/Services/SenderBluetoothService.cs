@@ -10,11 +10,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using InTheHand.Net;
-using InTheHand.Net.Sockets;
 using System.Windows.Forms;
 
+using InTheHand.Net;
+using InTheHand.Net.Sockets;
+
 using myBluetoothProject.Helpers;
+using myBluetoothProject.Messenger;
 
 namespace myBluetoothProject.Services
 {
@@ -23,7 +25,7 @@ namespace myBluetoothProject.Services
     /// </summary>
     public sealed class SenderBluetoothService : ISenderBluetoothService
     {
-         private readonly Guid _serviceClassId;
+        private readonly Guid _serviceClassId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SenderBluetoothService"/> class. 
@@ -44,17 +46,25 @@ namespace myBluetoothProject.Services
             // for not block the UI it will run in a different threat
             var task = Task.Run(() =>
             {
-                var devices = new List<Device>();
-                using (var bluetoothClient = new BluetoothClient())
+                try
                 {
-                    var array = bluetoothClient.DiscoverDevices(100,true,false,false);
-                    var count = array.Length;
-                    for (var i = 0; i < count; i++)
+                    var devices = new List<Device>();
+                    using (var bluetoothClient = new BluetoothClient())
                     {
-                        devices.Add(new Device(array[i]));
+                        var array = bluetoothClient.DiscoverDevices(100, true, false, false);
+                        var count = array.Length;
+                        for (var i = 0; i < count; i++)
+                        {
+                            devices.Add(new Device(array[i]));
+                        }
                     }
+                    return devices;
                 }
-                return devices;
+                catch (Exception ex)
+                {
+                    Msg.AppLog.Publish("ERROR : This device has not a bluetooth device!");
+                    return new List<Device>();
+                }
             });
             return await task;
         }
@@ -85,7 +95,7 @@ namespace myBluetoothProject.Services
                     try
                     {
                         var ep = new BluetoothEndPoint(device.DeviceInfo.DeviceAddress, _serviceClassId);
-                       
+
                         // connecting
                         bluetoothClient.Connect(ep);
 

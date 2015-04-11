@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace myBluetoothProject.Helpers
 {
@@ -14,6 +15,15 @@ namespace myBluetoothProject.Helpers
             NewValue = value;
             LocalServer = localServer;
             Esl = eslName;
+        }
+
+        public UpdateEventArgs(UpdateEventArgs other, Socket tcpSocket)
+        {
+            Type = other.Type;
+            NewValue = other.NewValue;
+            LocalServer = other.LocalServer;
+            Esl = other.Esl;
+            TcpSocket = tcpSocket;
         }
 
         public UpdateType Type
@@ -35,6 +45,11 @@ namespace myBluetoothProject.Helpers
         }
 
         public string Esl
+        {
+            get;
+            private set;
+        }
+        public Socket TcpSocket
         {
             get;
             private set;
