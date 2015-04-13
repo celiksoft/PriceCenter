@@ -39,7 +39,6 @@ namespace myBluetoothProject.Services
 
         private async void UpdateProductInfo(UpdateEventArgs args)
         {
-            Msg.AppClean.Publish();
             string dataType = "-1";
 
             switch (args.Type)
@@ -295,12 +294,15 @@ namespace myBluetoothProject.Services
                 content = state.sb.ToString();
                 if (content.IndexOf("<EOF>") > -1)
                 {
-                    // All the data has been read from the 
-                    // client. Display it on the console.
-                    Msg.AppLog.Publish(String.Format("Read {0} bytes from socket. \n ", content.Length));
-
                     UpdateEventArgs args = CreateUpdatePackage(content,Definitions.OnPriceCenterRequestGUID);
                     UpdateEventArgs argsWithSocket = new UpdateEventArgs(args, handler);
+
+                    Msg.AppClean.Publish();
+                    Msg.AppLog.Publish("Request is received from Price Center");
+                    Msg.AppLog.Publish("Request details : \n");
+                    Msg.AppLog.Publish(string.Format("Local server : {0}\n",args.LocalServer));
+                    Msg.AppLog.Publish(string.Format("Product : {0}\n", args.Esl));
+                    Msg.AppLog.Publish(string.Format("New info : {0}\n", args.NewValue));
 
                     // try connect with local server and get response
                     UpdateProductInfo(argsWithSocket);
@@ -333,7 +335,7 @@ namespace myBluetoothProject.Services
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Msg.AppLog.Publish(string.Format("Sent {0} bytes to client.", bytesSent));
+                Msg.AppLog.Publish(string.Format("Response sent to Price Center."));
 
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();

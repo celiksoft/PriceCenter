@@ -36,12 +36,6 @@ namespace ChainedMarketDijitalTag.Services
             // Connect to a remote device.
             try
             {
-                // Establish the remote endpoint for the socket.
-                // The name of the 
-                // remote device is "host.contoso.com".
-
-                //IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-                //IPAddress ipAddress = ipHostInfo.AddressList[0];
                 IPEndPoint remoteEP = new IPEndPoint(serverInfo.Ip, serverInfo.SocketNo);
 
                 // Create a TCP/IP socket.
@@ -51,7 +45,7 @@ namespace ChainedMarketDijitalTag.Services
                 // Connect to the remote endpoint.
                 client.BeginConnect(remoteEP,
                     new AsyncCallback(ConnectCallback), client);
-                connectDone.WaitOne();
+                connectDone.WaitOne(2000);
 
                 var serverMessage = CreateMessage(updateArgs);
 
@@ -73,6 +67,7 @@ namespace ChainedMarketDijitalTag.Services
             catch (Exception e)
             {
                 Msg.UpdateInfoLog.Publish("ERROR : A problem occured while connecting market server");
+                return;
             }
         }
 
@@ -86,8 +81,7 @@ namespace ChainedMarketDijitalTag.Services
                 // Complete the connection.
                 client.EndConnect(ar);
 
-                Msg.UpdateInfoLog.Publish(string.Format("Socket connected to {0}",
-                    client.RemoteEndPoint.ToString()));
+                Msg.UpdateInfoLog.Publish("Price center connected to market");
 
                 // Signal that the connection has been made.
                 connectDone.Set();
@@ -95,6 +89,7 @@ namespace ChainedMarketDijitalTag.Services
             catch (Exception e)
             {
                 Msg.UpdateInfoLog.Publish("ERROR : A problem occured while connecting market server");
+                return;
             }
         }
 
@@ -113,6 +108,7 @@ namespace ChainedMarketDijitalTag.Services
             catch (Exception e)
             {
                 Msg.UpdateInfoLog.Publish("ERROR : A problem occured while connecting market server");
+                return;
             }
         }
 
@@ -141,6 +137,7 @@ namespace ChainedMarketDijitalTag.Services
             catch (Exception e)
             {
                 Msg.UpdateInfoLog.Publish("ERROR : A problem occured while connecting market server");
+                return;
             }
         }
 
@@ -171,6 +168,7 @@ namespace ChainedMarketDijitalTag.Services
             catch (Exception e)
             {
                 Msg.UpdateInfoLog.Publish("ERROR : A problem occured while connecting market server");
+                return;
             }
         }
 
