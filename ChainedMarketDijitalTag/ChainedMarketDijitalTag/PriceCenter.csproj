@@ -66,6 +66,7 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\Definitions.cs" />
     <Compile Include="Helpers\Enumarations.cs" />
+    <Compile Include="Helpers\MarketBranchCommInfo.cs" />
     <Compile Include="Helpers\UpdateEventArgs.cs" />
     <Compile Include="Messenger\Messenger.cs" />
     <Compile Include="Messenger\Msg.cs" />
@@ -75,6 +76,8 @@
     <Compile Include="Models\MarketBranch.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Services\AsynchronousClient.cs" />
+    <Compile Include="Services\StateObject.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MarketOperationsView.xaml.cs">
       <DependentUpon>MarketOperationsView.xaml</DependentUpon>

@@ -67,6 +67,7 @@ namespace myBluetoothProject.Services
                 if (devices.Count == 0)
                 {
                     Msg.AppLog.Publish("There is no avaliable local server in range , Try Again");
+                    Send(args.TcpSocket, "FAILED");
                     return;
                 }
 
@@ -207,13 +208,9 @@ namespace myBluetoothProject.Services
                 // Data buffer for incoming data.
                 byte[] bytes = new Byte[1024];
 
-                // Establish the local endpoint for the socket.
-                // The DNS name of the computer
-                // running the listener is "host.contoso.com".
-
-                IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
-                IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
+                // Establish the remote endpoint for the socket.
+               
+                IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, Definitions.ServerSocketNo);
 
                 // Create a TCP/IP socket.
                 listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -222,7 +219,7 @@ namespace myBluetoothProject.Services
                 listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lo);
 
                 // Bind the socket to the local endpoint and listen for incoming connections.
-                listener.Bind(localEndPoint);
+                listener.Bind(remoteEndPoint);
                 listener.Listen(100);
 
                 while (true)

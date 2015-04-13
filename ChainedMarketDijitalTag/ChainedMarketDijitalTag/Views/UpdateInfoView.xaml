@@ -35,9 +35,9 @@
             <TextBox Text="{Binding UpdateInfoValue, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
             <Control Tag="PlaceHolder" />
-            <Button  IsEnabled="{Binding CanUpdate}">
+            <Button Width="70" Height="30" IsEnabled="{Binding CanUpdate}">
                 <Button.Content>
-                    <TextBlock Margin="0" FontSize="8"> UPDATE INFO </TextBlock>
+                    <TextBlock Margin="2" FontSize="8"> UPDATE INFO </TextBlock>
                 </Button.Content>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -48,10 +48,10 @@
 
         </UniformGrid>
 
-        <UniformGrid Columns="2">
+        <!--<UniformGrid Columns="2">
             <Separator VerticalAlignment="Center" />
             <Separator VerticalAlignment="Center" />
-
-        </UniformGrid>
+        </UniformGrid>-->
+        
     </StackPanel>
 </UserControl>

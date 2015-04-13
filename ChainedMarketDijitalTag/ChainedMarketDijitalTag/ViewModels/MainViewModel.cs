@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using ChainedMarketDijitalTag.Messenger;
 using ChainedMarketDijitalTag.Helpers;
 using ChainedMarketDijitalTag.Models;
+using ChainedMarketDijitalTag.Services;
 
 using SoftArcs.WPFSmartLibrary.MVVMCommands;
 using SoftArcs.WPFSmartLibrary.MVVMCore;
@@ -23,6 +24,7 @@ namespace ChainedMarketDijitalTag.ViewModels
         private string m_appLogs;
         private string m_updateInfoLogs;
         private string m_orderLogs;
+        private string m_validatedUserName;
 
         public MainViewModel()
         {
@@ -72,7 +74,10 @@ namespace ChainedMarketDijitalTag.ViewModels
             m_contries.Add(almanya);
 
             InfoTypes = new UpdateType[] { UpdateType.Price, UpdateType.Image, UpdateType.Info };
+            addAppLog("Price manager is started");
+            addAppLog("Price manager is ready to serve");
 
+            Messenger<Msg>.Default.AddHandler<string>(Msg.UpdateInfoLog, addUpdateInfoLog);
         }
 
         public void Initialize()
@@ -100,7 +105,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                 if (m_updateInfoLogs != value)
                 {
                     m_updateInfoLogs = value;
-                    OnPropertyChanged("MarketTradeLogs");
+                    OnPropertyChanged("UpdateInfoLogs");
                 }
             }
         }
@@ -133,8 +138,8 @@ namespace ChainedMarketDijitalTag.ViewModels
             OrderLogs = m_orderLogs + log + Environment.NewLine;
         }
 
-        private void UpdateProductInfo()
-        {   
+        public void UpdateProductInfo()
+        {
             // evaluete local server from db
             string localServer;
             if (m_selectedProduct.Name == "ELMA")
@@ -143,31 +148,12 @@ namespace ChainedMarketDijitalTag.ViewModels
                 localServer = "KASAP";
 
             UpdateEventArgs args = new UpdateEventArgs(m_selectedType, m_updateInfoValue, localServer, m_selectedProduct.Name);
-            var updateMessage = CreateMessage(args);
 
             // start a connection with market branch and wait request, Tcp client part
-
-
-
+            AsynchronousClient tcpClient = new AsynchronousClient(m_selectedMarketBranch.TcpServiceInfo,args);
+            tcpClient.StartClient();
         }
 
-        private string CreateMessage(UpdateEventArgs args)
-        {
-            string updateType;
-
-            if (args.Type == UpdateType.Price)
-                updateType = "0";
-            else if (args.Type == UpdateType.Image)
-                updateType = "1";
-            else if (args.Type == UpdateType.Info)
-                updateType = "2";
-            else
-                updateType = "-1";
-
-            string message = args.LocalServer + Definitions.OnPriceCenterRequestGUID + updateType + Definitions.OnPriceCenterRequestGUID +
-                             args.Esl + Definitions.OnPriceCenterRequestGUID + args.NewValue + Definitions.OnPriceCenterRequestGUID + "<EOF>";
-            return message;
-        }
 
         #region LoginVM
 
@@ -261,6 +247,13 @@ namespace ChainedMarketDijitalTag.ViewModels
             //! Remember : ONLY for demonstration purposes I have used a local Collection
             User validatedUser = this.userList.FirstOrDefault(user => user.UserName.Equals(username) &&
                                                                                 user.Password.Equals(password));
+
+            if (validatedUser != null)
+            {
+                m_validatedUserName = validatedUser.UserName;
+                addAppLog(string.Format("Username : {0}", m_validatedUserName));
+            }
+
             return validatedUser != null;
         }
 
@@ -284,10 +277,10 @@ namespace ChainedMarketDijitalTag.ViewModels
 
         private ObservableCollection<Country> m_contries;
         private bool m_canUpdate;
-        private Country m_selectedCountry = new Country();
-        private City m_selectedCity = new City();
-        private MarketBranch m_selectedMarketBranch = new MarketBranch();
-        private Product m_selectedProduct = new Product();
+        private Country m_selectedCountry;
+        private City m_selectedCity;
+        private MarketBranch m_selectedMarketBranch;
+        private Product m_selectedProduct;
         private string m_updateInfoValue;
         private UpdateEventArgs m_updateEventArgs;
         private UpdateType m_selectedType;
@@ -308,15 +301,7 @@ namespace ChainedMarketDijitalTag.ViewModels
 
         public bool CanUpdate
         {
-            get { return m_canUpdate; }
-            set
-            {
-                if (m_canUpdate != value)
-                {
-                    m_canUpdate = value;
-                    OnPropertyChanged("CanUpdate");
-                }
-            }
+            get { return m_selectedCountry != null && m_selectedCity != null && m_selectedMarketBranch != null && m_selectedProduct != null && m_selectedType != UpdateType.Unknown && m_updateInfoValue != null && m_updateInfoValue!= ""; }
         }
 
         public ObservableCollection<Country> Countries
@@ -342,18 +327,30 @@ namespace ChainedMarketDijitalTag.ViewModels
         {
             get
             {
-                return m_selectedCountry.Cities;
+                if (m_selectedCountry != null)
+                    return m_selectedCountry.Cities;
+                return new ObservableCollection<City>();
             }
         }
 
         public ObservableCollection<MarketBranch> MarketBranches
         {
-            get { return m_selectedCity.MarketBranches; }
+            get
+            {
+                if (m_selectedCity != null)
+                    return m_selectedCity.MarketBranches;
+                return new ObservableCollection<MarketBranch>();
+            }
         }
 
         public ObservableCollection<Product> Products
         {
-            get { return m_selectedMarketBranch.Products; }
+            get
+            {
+                if (m_selectedMarketBranch != null)
+                    return m_selectedMarketBranch.Products;
+                return new ObservableCollection<Product>();
+            }
         }
 
         public Country SelectedCountry
@@ -361,13 +358,14 @@ namespace ChainedMarketDijitalTag.ViewModels
             get { return m_selectedCountry; }
             set
             {
-                if (m_selectedCountry != value && value != null)
+                if (m_selectedCountry != value)
                 {
                     m_selectedCountry = value;
                     OnPropertyChanged("SelectedCountry");
                     OnPropertyChanged("Cities");
                     OnPropertyChanged("MarketBranches");
                     OnPropertyChanged("Products");
+                    OnPropertyChanged("CanUpdate");
                 }
             }
         }
@@ -377,11 +375,12 @@ namespace ChainedMarketDijitalTag.ViewModels
             get { return m_selectedCity; }
             set
             {
-                if (m_selectedCity != value && value != null)
+                if (m_selectedCity != value)
                 {
                     m_selectedCity = value;
                     OnPropertyChanged("SelectedCity");
                     OnPropertyChanged("Products");
+                    OnPropertyChanged("CanUpdate");
                     OnPropertyChanged("MarketBranches");
                 }
             }
@@ -392,10 +391,11 @@ namespace ChainedMarketDijitalTag.ViewModels
             get { return m_selectedMarketBranch; }
             set
             {
-                if (m_selectedMarketBranch != value && value != null)
+                if (m_selectedMarketBranch != value)
                 {
                     m_selectedMarketBranch = value;
                     OnPropertyChanged("SelectedMarketBranch");
+                    OnPropertyChanged("CanUpdate");
                     OnPropertyChanged("Products");
                 }
             }
@@ -406,20 +406,14 @@ namespace ChainedMarketDijitalTag.ViewModels
             get { return m_selectedProduct; }
             set
             {
-                if (m_selectedProduct != value && value != null)
+                if (m_selectedProduct != value)
                 {
                     m_selectedProduct = value;
+                    OnPropertyChanged("CanUpdate");
                     OnPropertyChanged("SelectedProduct");
                 }
             }
         }
-
-        public UpdateType[] InfoTypes
-        {
-            get;
-            private set;
-        }
-
         public UpdateType SelectedType
         {
             get { return m_selectedType; }
@@ -429,10 +423,19 @@ namespace ChainedMarketDijitalTag.ViewModels
                 {
                     m_selectedType = value;
                     OnPropertyChanged("SelectedType");
+                    OnPropertyChanged("CanUpdate");
                 }
             }
         }
 
-        #endregion 
+
+        public UpdateType[] InfoTypes
+        {
+            get;
+            private set;
+        }
+
+
+        #endregion
     }
 }
