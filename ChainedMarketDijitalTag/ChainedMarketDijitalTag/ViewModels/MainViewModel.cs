@@ -27,7 +27,8 @@ namespace ChainedMarketDijitalTag.ViewModels
         private string m_validatedUserName;
 
         public MainViewModel()
-        {
+        {   
+            // Login View Model initialization
             if (ViewModelHelper.IsInDesignModeStatic == false)
             {
                 this.initializeAllCommands();
@@ -42,23 +43,32 @@ namespace ChainedMarketDijitalTag.ViewModels
             Product elma = new Product(1, "ELMA", "MANAV");
             Product kavurma = new Product(1, "KAVURMA", "KASAP");
 
-            MarketBranch pendik = new MarketBranch("PENDİK", "TÜRKİYE", "İSTANBUL");
-            MarketBranch yenisehir = new MarketBranch("YENİŞEHİR", "TÜRKİYE", "BURSA");
+            MarketBranch merkez = new MarketBranch("MERKEZ", "TÜRKİYE", "İSTANBUL","PENDİK");
+            MarketBranch sahil = new MarketBranch("SAHIL", "TÜRKİYE", "BURSA", "YENİSEHİR");
+            MarketBranch schoolstreet = new MarketBranch("SCHOOLSTREET", "ALMANYA", "BERLİN", "HERTZ");
 
-            MarketBranch hartz = new MarketBranch("HARTZ", "ALMANYA", "BERLİN");
+            merkez.Products.Add(elma);
+            sahil.Products.Add(kavurma);
+            sahil.Products.Add(elma);
+            schoolstreet.Products.Add(elma);
 
-            pendik.Products.Add(elma);
-            pendik.Products.Add(kavurma);
-            yenisehir.Products.Add(elma);
-            hartz.Products.Add(elma);
+            SubCity yenisehir = new SubCity("YENISEHIR");
+            SubCity pendik = new SubCity("PENDİK");
+            SubCity hertz = new SubCity("HERTZ");
 
             City bursa = new City("BURSA");
             City istanbul = new City("İSTANBUL");
             City berlin = new City("BERLİN");
 
-            bursa.MarketBranches.Add(yenisehir);
-            istanbul.MarketBranches.Add(pendik);
-            berlin.MarketBranches.Add(hartz);
+            yenisehir.MarketBranches.Add(sahil);
+            pendik.MarketBranches.Add(merkez);
+            hertz.MarketBranches.Add(schoolstreet);
+
+            bursa.SubCities.Add(yenisehir);
+            istanbul.SubCities.Add(pendik);
+            berlin.SubCities.Add(hertz);
+
+
 
             Country turkiye = new Country("TÜRKİYE");
             Country almanya = new Country("ALMANYA");
@@ -279,6 +289,7 @@ namespace ChainedMarketDijitalTag.ViewModels
         private bool m_canUpdate;
         private Country m_selectedCountry;
         private City m_selectedCity;
+        private SubCity m_selectedSubCity;
         private MarketBranch m_selectedMarketBranch;
         private Product m_selectedProduct;
         private string m_updateInfoValue;
@@ -301,7 +312,7 @@ namespace ChainedMarketDijitalTag.ViewModels
 
         public bool CanUpdate
         {
-            get { return m_selectedCountry != null && m_selectedCity != null && m_selectedMarketBranch != null && m_selectedProduct != null && m_selectedType != UpdateType.Unknown && m_updateInfoValue != null && m_updateInfoValue!= ""; }
+            get { return m_selectedCountry != null && m_selectedCity != null && m_selectedSubCity != null  && m_selectedMarketBranch != null && m_selectedProduct != null && m_selectedType != UpdateType.Unknown && m_updateInfoValue != null && m_updateInfoValue!= ""; }
         }
 
         public ObservableCollection<Country> Countries
@@ -317,6 +328,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                     m_contries = value;
                     OnPropertyChanged("Countries");
                     OnPropertyChanged("Cities");
+                    OnPropertyChanged("SubCities");
                     OnPropertyChanged("MarketBranches");
                     OnPropertyChanged("Products");
                 }
@@ -333,12 +345,22 @@ namespace ChainedMarketDijitalTag.ViewModels
             }
         }
 
-        public ObservableCollection<MarketBranch> MarketBranches
+        public ObservableCollection<SubCity> SubCities
         {
             get
             {
                 if (m_selectedCity != null)
-                    return m_selectedCity.MarketBranches;
+                    return m_selectedCity.SubCities;
+                return new ObservableCollection<SubCity>();
+            }
+        }
+
+        public ObservableCollection<MarketBranch> MarketBranches
+        {
+            get
+            {
+                if (m_selectedSubCity != null)
+                    return m_selectedSubCity.MarketBranches;
                 return new ObservableCollection<MarketBranch>();
             }
         }
@@ -363,6 +385,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                     m_selectedCountry = value;
                     OnPropertyChanged("SelectedCountry");
                     OnPropertyChanged("Cities");
+                    OnPropertyChanged("SubCities");
                     OnPropertyChanged("MarketBranches");
                     OnPropertyChanged("Products");
                     OnPropertyChanged("CanUpdate");
@@ -379,12 +402,29 @@ namespace ChainedMarketDijitalTag.ViewModels
                 {
                     m_selectedCity = value;
                     OnPropertyChanged("SelectedCity");
+                    OnPropertyChanged("SubCities");
                     OnPropertyChanged("Products");
                     OnPropertyChanged("CanUpdate");
                     OnPropertyChanged("MarketBranches");
                 }
             }
         }
+        public SubCity SelectedSubCity
+        {
+            get { return m_selectedSubCity; }
+            set
+            {
+                if (m_selectedSubCity != value)
+                {
+                    m_selectedSubCity = value;
+                    OnPropertyChanged("SelectedSubCity");
+                    OnPropertyChanged("MarketBranches");
+                    OnPropertyChanged("Products");
+                    OnPropertyChanged("CanUpdate");
+                }
+            }
+        }
+
 
         public MarketBranch SelectedMarketBranch
         {

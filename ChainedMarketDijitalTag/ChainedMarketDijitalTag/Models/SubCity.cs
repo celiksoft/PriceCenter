@@ -8,21 +8,22 @@ using System.ComponentModel;
 
 namespace ChainedMarketDijitalTag.Models
 {
-    public class City
+    public class SubCity
     {
-        public City(string name)
+        public SubCity(string name)
         {
             Name = name;
-            SubCities = new ObservableCollection<SubCity>();
+            MarketBranches = new ObservableCollection<MarketBranch>();
         }
 
-        public City()
+        public SubCity()
         {
             Name = "";
-            SubCities = new ObservableCollection<SubCity>();
+            MarketBranches = new ObservableCollection<MarketBranch>();
         }
 
         public string Name { get; private set; }
-        public ObservableCollection<SubCity> SubCities { get; private set; }
+        public ObservableCollection<MarketBranch> MarketBranches { get; private set; }
     }
 }
+

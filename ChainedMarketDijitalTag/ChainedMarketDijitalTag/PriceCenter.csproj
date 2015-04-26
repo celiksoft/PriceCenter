@@ -75,6 +75,7 @@
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\MarketBranch.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\SubCity.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Services\AsynchronousClient.cs" />
     <Compile Include="Services\StateObject.cs" />

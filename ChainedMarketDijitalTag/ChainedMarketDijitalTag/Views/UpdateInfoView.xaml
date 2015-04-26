@@ -20,6 +20,10 @@
             <ComboBox ItemsSource="{Binding Cities}" DisplayMemberPath="Name"
                        SelectedItem="{Binding SelectedCity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
+            <TextBlock Text="İlçe seçiniz :" VerticalAlignment="Center" Margin="2" />
+            <ComboBox ItemsSource="{Binding SubCities}" DisplayMemberPath="Name"
+                       SelectedItem="{Binding SelectedSubCity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" />
+
             <TextBlock Text="Şube seçiniz :" VerticalAlignment="Center" Margin="2" />
             <ComboBox ItemsSource="{Binding MarketBranches}" DisplayMemberPath="Name" SelectedValuePath=""
                         SelectedItem="{Binding SelectedMarketBranch, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" />

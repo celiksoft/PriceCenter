@@ -18,16 +18,18 @@ namespace ChainedMarketDijitalTag.Models
         private string m_marketBranchLocation;
         private string m_country;
         private string m_city;
+        private string m_subCity;
         private ObservableCollection<Product> m_products;
         private MarketBranchServerInfo m_tcpSocketInfo;      
 
-        public MarketBranch(string name,string country,string city)
+        public MarketBranch(string name,string country,string city,string subCity)
         {
             ++m_marketCount;
             m_id = m_marketCount + 1;
             m_marketBranchLocation = name;
             m_country = country;
             m_city = city;
+            m_subCity = subCity;
             m_products = new ObservableCollection<Product>();
             m_tcpSocketInfo = new MarketBranchServerInfo(IPAddress.Parse("192.168.2.200"), 11000);
         }
@@ -54,6 +56,13 @@ namespace ChainedMarketDijitalTag.Models
             get { return m_city; }
             private set { m_city = value; }
         }
+
+        public string SubCity
+        {
+            get { return m_subCity; }
+            private set { m_subCity = value; }
+        }
+
 
         public MarketBranchServerInfo TcpServiceInfo
         {
