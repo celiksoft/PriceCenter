@@ -3,9 +3,44 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ig="http://schemas.infragistics.com/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
+             d:DesignHeight="500" d:DesignWidth="700">
+
+    <Grid x:Name="LayoutRoot" Margin="0" Background="White">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ig:XamDataChart x:Name="DataChart" Grid.Row="1"
+                     HorizontalZoomable="False" VerticalZoomable="False">
+
+            <ig:XamDataChart.Axes>
+                <ig:NumericYAxis x:Name="YAxis" Title="Fiyat" Label="{}{} TL"/>
+                <ig:CategoryXAxis x:Name="XAxis" ItemsSource="{Binding RegionalPrices}" Interval="1" Title="Yıllar" Label="{}{Name}">
+                </ig:CategoryXAxis>
+            </ig:XamDataChart.Axes>
+            <!-- ========================================================================== -->
+            <ig:XamDataChart.Series>
+
+                <ig:LineSeries ItemsSource="{Binding Years}" ValueMemberPath="Year" ShowDefaultTooltip="True" Legend="{Binding ElementName=TitleLegend}"
+                       Title="Aylık Bölgesel Fiyat Ortalaması" Thickness="2" MarkerType="None"
+                       IsHighlightingEnabled="True"
+                       IsTransitionInEnabled="True"
+                       XAxis="{Binding ElementName=XAxis}" 
+                       YAxis="{Binding ElementName=YAxis}">
+                </ig:LineSeries>
+
+            </ig:XamDataChart.Series>
+        </ig:XamDataChart>
+
+        <ig:Legend x:Name="TitleLegend"
+            VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,5,5,5">
+        </ig:Legend>
+
     </Grid>
+
 </UserControl>
