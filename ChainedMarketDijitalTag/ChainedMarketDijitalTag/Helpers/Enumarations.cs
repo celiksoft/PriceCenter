@@ -13,4 +13,11 @@ namespace ChainedMarketDijitalTag.Helpers
         Info,
         Unknown,
     }
+
+    public enum ImageType
+    {
+        Indirim,
+        Kampanya,
+        Empty,
+    }
 }

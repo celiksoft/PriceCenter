@@ -113,7 +113,10 @@
     <Compile Include="Messenger\MsgExtensions.cs" />
     <Compile Include="Models\City.cs" />
     <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\DayPrice.cs" />
     <Compile Include="Models\MarketBranch.cs" />
+    <Compile Include="Models\MonthPrice.cs" />
+    <Compile Include="Models\PriceHistory.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\SubCity.cs" />
     <Compile Include="Models\User.cs" />

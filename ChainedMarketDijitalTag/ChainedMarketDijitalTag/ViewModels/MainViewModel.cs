@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.IO;
+using System.Threading;
+using System.Windows.Threading;
 using System.Collections.ObjectModel;
 
 using ChainedMarketDijitalTag.Messenger;
@@ -27,7 +29,7 @@ namespace ChainedMarketDijitalTag.ViewModels
         private string m_validatedUserName;
 
         public MainViewModel()
-        {   
+        {
             // Login View Model initialization
             if (ViewModelHelper.IsInDesignModeStatic == false)
             {
@@ -43,7 +45,7 @@ namespace ChainedMarketDijitalTag.ViewModels
             Product elma = new Product(1, "ELMA", "MANAV");
             Product kavurma = new Product(1, "KAVURMA", "KASAP");
 
-            MarketBranch merkez = new MarketBranch("MERKEZ", "TÜRKİYE", "İSTANBUL","PENDİK");
+            MarketBranch merkez = new MarketBranch("MERKEZ", "TÜRKİYE", "İSTANBUL", "PENDİK");
             MarketBranch sahil = new MarketBranch("SAHIL", "TÜRKİYE", "BURSA", "YENİSEHİR");
             MarketBranch schoolstreet = new MarketBranch("SCHOOLSTREET", "ALMANYA", "BERLİN", "HERTZ");
 
@@ -160,8 +162,18 @@ namespace ChainedMarketDijitalTag.ViewModels
             UpdateEventArgs args = new UpdateEventArgs(m_selectedType, m_updateInfoValue, localServer, m_selectedProduct.Name);
 
             // start a connection with market branch and wait request, Tcp client part
-            AsynchronousClient tcpClient = new AsynchronousClient(m_selectedMarketBranch.TcpServiceInfo,args);
+            AsynchronousClient tcpClient = new AsynchronousClient(m_selectedMarketBranch.TcpServiceInfo, args);
             tcpClient.StartClient();
+
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                m_selectedProduct.DailyPrices.Add(new DayPrice(1, 3.45));
+                m_selectedProduct.DailyPrices.Add(new DayPrice(2, 4.45));
+                m_selectedProduct.DailyPrices.Add(new DayPrice(3, 1.45));
+                m_selectedProduct.DailyPrices.Add(new DayPrice(4, 2.45));
+                OnPropertyChanged("DailyPrices");
+            });
+
         }
 
 
@@ -312,7 +324,7 @@ namespace ChainedMarketDijitalTag.ViewModels
 
         public bool CanUpdate
         {
-            get { return m_selectedCountry != null && m_selectedCity != null && m_selectedSubCity != null  && m_selectedMarketBranch != null && m_selectedProduct != null && m_selectedType != UpdateType.Unknown && m_updateInfoValue != null && m_updateInfoValue!= ""; }
+            get { return m_selectedCountry != null && m_selectedCity != null && m_selectedSubCity != null && m_selectedMarketBranch != null && m_selectedProduct != null && m_selectedType != UpdateType.Unknown && m_updateInfoValue != null && m_updateInfoValue != ""; }
         }
 
         public ObservableCollection<Country> Countries
@@ -409,6 +421,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                 }
             }
         }
+
         public SubCity SelectedSubCity
         {
             get { return m_selectedSubCity; }
