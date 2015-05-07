@@ -39,7 +39,7 @@
             <TextBox Text="{Binding UpdateInfoValue, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
 
             <Control Tag="PlaceHolder" />
-            <Button Width="70" Height="30" IsEnabled="{Binding CanUpdate}">
+            <Button  Background="Green" Foreground="AliceBlue" Width="70" Height="30" IsEnabled="{Binding CanUpdate}">
                 <Button.Content>
                     <TextBlock Margin="2" FontSize="8"> UPDATE INFO </TextBlock>
                 </Button.Content>

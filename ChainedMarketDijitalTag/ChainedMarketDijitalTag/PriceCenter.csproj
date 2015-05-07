@@ -113,10 +113,8 @@
     <Compile Include="Messenger\MsgExtensions.cs" />
     <Compile Include="Models\City.cs" />
     <Compile Include="Models\Country.cs" />
-    <Compile Include="Models\DayPrice.cs" />
     <Compile Include="Models\MarketBranch.cs" />
-    <Compile Include="Models\MonthPrice.cs" />
-    <Compile Include="Models\PriceHistory.cs" />
+    <Compile Include="Models\DatePrice.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\SubCity.cs" />
     <Compile Include="Models\User.cs" />
@@ -129,8 +127,8 @@
     <Compile Include="Views\MonthlyPriceView.xaml.cs">
       <DependentUpon>MonthlyPriceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RegionalPriceView.xaml.cs">
-      <DependentUpon>RegionalPriceView.xaml</DependentUpon>
+    <Compile Include="Views\HistoricalPriceView.xaml.cs">
+      <DependentUpon>HistoricalPriceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UpdateInfoView.xaml.cs">
       <DependentUpon>UpdateInfoView.xaml</DependentUpon>
@@ -162,7 +160,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\RegionalPriceView.xaml">
+    <Page Include="Views\HistoricalPriceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

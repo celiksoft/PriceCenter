@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ChainedMarketDijitalTag.Models
 {
-    public class DayPrice
+    public class DatePrice
     {
-        public DayPrice(int dayNo, double price)
+        public DatePrice(DateTime date, double price)
         {
-            DayNo = dayNo;
+            Date = date;
             Price = price;
         }
 
-        public int DayNo { get; set; }
+        public DateTime Date { get; set; }
         public double Price { get; set; }
     }
 }

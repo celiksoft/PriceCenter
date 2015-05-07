@@ -167,15 +167,11 @@ namespace ChainedMarketDijitalTag.ViewModels
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                m_selectedProduct.DailyPrices.Add(new DayPrice(1, 3.45));
-                m_selectedProduct.DailyPrices.Add(new DayPrice(2, 4.45));
-                m_selectedProduct.DailyPrices.Add(new DayPrice(3, 1.45));
-                m_selectedProduct.DailyPrices.Add(new DayPrice(4, 2.45));
-                OnPropertyChanged("DailyPrices");
+                double price;
+                if (double.TryParse(m_updateInfoValue, out price))
+                    m_selectedProduct.UpdatePrice(price);
             });
-
         }
-
 
         #region LoginVM
 

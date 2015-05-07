@@ -44,7 +44,7 @@
                 
                 <TextBlock Text="Hoş Geldiniz" VerticalAlignment="Center" Margin="2" />
 
-                <Button x:Name="btnLock" Background="AliceBlue" Height="20" Width="50" Content="LogOut" Click="btnLock_Click" />
+                <Button x:Name="btnLock" Background="Red" Foreground="AliceBlue" Height="20" Width="50" Content="LogOut" Click="btnLock_Click"  />
 
             </UniformGrid>
 
@@ -67,8 +67,8 @@
                 <Views:YearlyPriceView x:Name="YearlyPriceViewInstance" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0"
                 DataContext="{Binding ElementName=UpdateInfoViewIstance, Path=DataContext}" />
             </TabItem>
-            <TabItem Header="Bölgesel Fiyat Değişimi">
-                <Views:RegionalPriceView x:Name="RegionalPriceViewInstance" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0"
+            <TabItem Header="Uzun Vadeli Fiyat Değişimi">
+                <Views:HistoricalPriceView x:Name="HistoricalPriceViewInstance" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0"
                 DataContext="{Binding ElementName=UpdateInfoViewIstance, Path=DataContext}" />
             </TabItem>
 

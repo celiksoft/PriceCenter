@@ -20,14 +20,14 @@
 
             <ig:XamDataChart.Axes>
                 <ig:NumericYAxis x:Name="YAxis" Title="Fiyat" Label="{}{} TL"/>
-                <ig:CategoryXAxis x:Name="XAxis" ItemsSource="{Binding SelectedProduct.DailyPrices}" Interval="1" Title="Günler" Label="{}{DayNo}">
+                <ig:CategoryXAxis x:Name="XAxis" ItemsSource="{Binding SelectedProduct.MonthlyPrices}" Title="Günler" Label="{}{Date:dd.MM}">
                 </ig:CategoryXAxis>
             </ig:XamDataChart.Axes>
             <!-- ========================================================================== -->
             <ig:XamDataChart.Series>
 
-                <ig:LineSeries ItemsSource="{Binding SelectedProduct.DailyPrices}" ValueMemberPath="Price" ShowDefaultTooltip="True" Legend="{Binding ElementName=TitleLegend}"
-                       Title="Aylık Fiyat Değişimi" Thickness="2" MarkerType="None"
+                <ig:LineSeries ItemsSource="{Binding SelectedProduct.MonthlyPrices}" ValueMemberPath="Price" ShowDefaultTooltip="True" Legend="{Binding ElementName=TitleLegend}"
+                       Title="Aylık Fiyat Değişimi" Thickness="2" MarkerType="Circle"
                        IsHighlightingEnabled="True"
                        IsTransitionInEnabled="True"
                        XAxis="{Binding ElementName=XAxis}" 

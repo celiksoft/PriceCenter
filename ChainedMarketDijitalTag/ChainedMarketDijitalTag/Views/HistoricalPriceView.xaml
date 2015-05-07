@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ChainedMarketDijitalTag.Views.RegionalPriceView"
+﻿<UserControl x:Class="ChainedMarketDijitalTag.Views.HistoricalPriceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -20,14 +20,14 @@
 
             <ig:XamDataChart.Axes>
                 <ig:NumericYAxis x:Name="YAxis" Title="Fiyat" Label="{}{} TL"/>
-                <ig:CategoryXAxis x:Name="XAxis" ItemsSource="{Binding RegionalPrices}" Interval="1" Title="Yıllar" Label="{}{Name}">
+                <ig:CategoryXAxis x:Name="XAxis" ItemsSource="{Binding SelectedProduct.HistoricalPrices}" Title="Yıllar" Label="{}{Date:yyyy}">
                 </ig:CategoryXAxis>
             </ig:XamDataChart.Axes>
             <!-- ========================================================================== -->
             <ig:XamDataChart.Series>
 
-                <ig:LineSeries ItemsSource="{Binding Years}" ValueMemberPath="Year" ShowDefaultTooltip="True" Legend="{Binding ElementName=TitleLegend}"
-                       Title="Aylık Bölgesel Fiyat Ortalaması" Thickness="2" MarkerType="None"
+                <ig:LineSeries ItemsSource="{Binding SelectedProduct.HistoricalPrices}" ValueMemberPath="Price" ShowDefaultTooltip="True" Legend="{Binding ElementName=TitleLegend}"
+                       Title="Uzun Vadeli Fiyat Değişimi" Thickness="2" MarkerType="Circle"
                        IsHighlightingEnabled="True"
                        IsTransitionInEnabled="True"
                        XAxis="{Binding ElementName=XAxis}" 

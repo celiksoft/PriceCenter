@@ -18,9 +18,9 @@ namespace ChainedMarketDijitalTag.Views
     /// <summary>
     /// Interaction logic for RegionalPriceView.xaml
     /// </summary>
-    public partial class RegionalPriceView : UserControl
+    public partial class HistoricalPriceView : UserControl
     {
-        public RegionalPriceView()
+        public HistoricalPriceView()
         {
             InitializeComponent();
         }
