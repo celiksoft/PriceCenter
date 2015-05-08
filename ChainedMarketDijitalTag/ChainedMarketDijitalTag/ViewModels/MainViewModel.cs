@@ -19,6 +19,10 @@ using SoftArcs.WPFSmartLibrary.MVVMCommands;
 using SoftArcs.WPFSmartLibrary.MVVMCore;
 using SoftArcs.WPFSmartLibrary.SmartUserControls;
 
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Shared;
+
 namespace ChainedMarketDijitalTag.ViewModels
 {
     public class MainViewModel : ViewModelBase
@@ -169,7 +173,7 @@ namespace ChainedMarketDijitalTag.ViewModels
             {
                 double price;
                 if (double.TryParse(m_updateInfoValue, out price))
-                    m_selectedProduct.UpdatePrice(price);
+                    m_selectedProduct.UpdatePrice(new PriceUpdate(DateTime.Now,price,m_validatedUserName));
             });
         }
 
@@ -246,16 +250,21 @@ namespace ChainedMarketDijitalTag.ViewModels
 
         private void getAllUser()
         {
-            //+ Here you would implement code, which will get all user from a database,
-            //+ a webservice or from somewhere else (if you want to display the right image)
-            //! Remember : ONLY for demonstration purposes I have used a local Collection
-            this.userList = new List<User>()
-								 {
-									new User() { UserName="celik", Password="celik1234",
-													 ImageSourcePath = Path.Combine( userImagesPath, "user.png") },
-                                    new User() { UserName="rcelik", Password="1234",
-													 ImageSourcePath = Path.Combine( userImagesPath, "user.png") },
-								 };
+            // connect to database to get user informations
+            MongoServerSettings settings = new MongoServerSettings();
+            MongoServer server = new MongoServer(settings);
+            server.Connect();
+
+            MongoDatabase db = server.GetDatabase("DigitalPriceCenter");
+
+            var users = db.GetCollection("Users");
+
+            this.userList = new List<User>();
+
+            foreach (User user in users.FindAllAs<User>())
+                this.userList.Add(user);
+
+            server.Disconnect();
         }
 
         private bool validateUser(string username, string password)
