@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("ChainedMarketDijitalTag")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Accenture")]
+[assembly: AssemblyCompany("CelikSoft")]
 [assembly: AssemblyProduct("ChainedMarketDijitalTag")]
-[assembly: AssemblyCopyright("Copyright © Accenture 2015")]
+[assembly: AssemblyCopyright("Copyright © CelikSoft 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

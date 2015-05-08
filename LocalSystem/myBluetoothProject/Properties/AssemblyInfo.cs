@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("myBluetoothProject")]
+[assembly: AssemblyTitle("MarketLocalServer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Accenture")]
-[assembly: AssemblyProduct("myBluetoothProject")]
-[assembly: AssemblyCopyright("Copyright © Accenture 2014")]
+[assembly: AssemblyCompany("CelikSoft")]
+[assembly: AssemblyProduct("MarketLocalServer")]
+[assembly: AssemblyCopyright("Copyright © CelikSoft 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
