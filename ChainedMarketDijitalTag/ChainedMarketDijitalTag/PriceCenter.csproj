@@ -119,7 +119,7 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\Definitions.cs" />
     <Compile Include="Helpers\Enumarations.cs" />
-    <Compile Include="Helpers\MarketBranchCommInfo.cs" />
+    <Compile Include="Helpers\MarketBranchServerInfo.cs" />
     <Compile Include="Helpers\UpdateEventArgs.cs" />
     <Compile Include="Messenger\Messenger.cs" />
     <Compile Include="Messenger\Msg.cs" />

@@ -38,56 +38,87 @@ namespace ChainedMarketDijitalTag.ViewModels
             if (ViewModelHelper.IsInDesignModeStatic == false)
             {
                 this.initializeAllCommands();
-
-                //+ This is only neccessary if you want to display the appropriate image while typing the user name.
-                //+ If you want a higher security level you wouldn't do this here !
-                //! Remember : ONLY for demonstration purposes I have used a local Collection
                 this.getAllUser();
             }
 
-            #region TestData
-            Product elma = new Product(1, "ELMA", "MANAV");
-            Product kavurma = new Product(1, "KAVURMA", "KASAP");
+            //#region TestData
+            //Product elma = new Product("ELMA", "MANAV");
+            //Product kavurma = new Product("KAVURMA", "KASAP");
 
-            MarketBranch merkez = new MarketBranch("MERKEZ", "TÜRKİYE", "İSTANBUL", "PENDİK");
-            MarketBranch sahil = new MarketBranch("SAHIL", "TÜRKİYE", "BURSA", "YENİSEHİR");
-            MarketBranch schoolstreet = new MarketBranch("SCHOOLSTREET", "ALMANYA", "BERLİN", "HERTZ");
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 02, 20), 1.55, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 08, 20), 1.95, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 11, 20), 1.85, m_validatedUserName));
 
-            merkez.Products.Add(elma);
-            sahil.Products.Add(kavurma);
-            sahil.Products.Add(elma);
-            schoolstreet.Products.Add(elma);
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2013, 02, 20), 2.15, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2013, 08, 20), 2.35, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2013, 11, 20), 2.55, m_validatedUserName));
 
-            SubCity yenisehir = new SubCity("YENISEHIR");
-            SubCity pendik = new SubCity("PENDİK");
-            SubCity hertz = new SubCity("HERTZ");
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2014, 02, 20), 2.45, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2014, 08, 20), 2.85, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2014, 11, 20), 2.95, m_validatedUserName));
 
-            City bursa = new City("BURSA");
-            City istanbul = new City("İSTANBUL");
-            City berlin = new City("BERLİN");
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 01, 10), 3.00, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 02, 20), 2.85, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 03, 20), 2.45, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 04, 20), 2.25, m_validatedUserName));
+            //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 05, 02), 2.55, m_validatedUserName));
 
-            yenisehir.MarketBranches.Add(sahil);
-            pendik.MarketBranches.Add(merkez);
-            hertz.MarketBranches.Add(schoolstreet);
+            //elma.FillPriceHistory();
 
-            bursa.SubCities.Add(yenisehir);
-            istanbul.SubCities.Add(pendik);
-            berlin.SubCities.Add(hertz);
+            //MarketBranch merkez = new MarketBranch("MERKEZ", "TÜRKİYE", "İSTANBUL", "PENDİK");
+            //MarketBranch sahil = new MarketBranch("SAHIL", "TÜRKİYE", "BURSA", "YENİSEHİR");
+            //MarketBranch schoolstreet = new MarketBranch("SCHOOLSTREET", "ALMANYA", "BERLİN", "HERTZ");
 
+            //merkez.Products.Add(elma);
+            ////sahil.Products.Add(kavurma);
+            ////sahil.Products.Add(elma);
+            ////schoolstreet.Products.Add(elma);
 
+            //SubCity yenisehir = new SubCity("YENISEHIR");
+            //SubCity pendik = new SubCity("PENDİK");
+            //SubCity hertz = new SubCity("HERTZ");
 
-            Country turkiye = new Country("TÜRKİYE");
-            Country almanya = new Country("ALMANYA");
+            //City bursa = new City("BURSA");
+            //City istanbul = new City("İSTANBUL");
+            //City berlin = new City("BERLİN");
 
-            turkiye.Cities.Add(bursa);
-            turkiye.Cities.Add(istanbul);
-            almanya.Cities.Add(berlin);
+            //yenisehir.MarketBranches.Add(sahil);
+            //pendik.MarketBranches.Add(merkez);
+            //hertz.MarketBranches.Add(schoolstreet);
 
-            #endregion TestData
+            //bursa.SubCities.Add(yenisehir);
+            //istanbul.SubCities.Add(pendik);
+            //berlin.SubCities.Add(hertz);
+
+            //Country turkiye = new Country("TÜRKİYE");
+            //Country almanya = new Country("ALMANYA");
+
+            //turkiye.Cities.Add(bursa);
+            //turkiye.Cities.Add(istanbul);
+            //almanya.Cities.Add(berlin);
+
+            //#endregion TestData
 
             m_contries = new ObservableCollection<Country>();
-            m_contries.Add(turkiye);
-            m_contries.Add(almanya);
+            //m_contries.Add(turkiye);
+            //m_contries.Add(almanya);
+
+            // connect to database to get user informations
+            MongoServerSettings settings = new MongoServerSettings();
+            MongoServer server = new MongoServer(settings);
+            server.Connect();
+
+            MongoDatabase db = server.GetDatabase("DigitalPriceCenter");
+
+            var countries = db.GetCollection("Countries");
+
+            foreach (Country country in countries.FindAllAs<Country>())
+                m_contries.Add(country);
+
+            //countries.Insert<Country>(turkiye);
+            //countries.Insert<Country>(almanya);
+
+            server.Disconnect();
 
             InfoTypes = new UpdateType[] { UpdateType.Price, UpdateType.Image, UpdateType.Info };
             addAppLog("Price manager is started");
@@ -157,11 +188,7 @@ namespace ChainedMarketDijitalTag.ViewModels
         public void UpdateProductInfo()
         {
             // evaluete local server from db
-            string localServer;
-            if (m_selectedProduct.Name == "ELMA")
-                localServer = "MANAV";
-            else
-                localServer = "KASAP";
+            string localServer = m_selectedProduct.LocalServer;
 
             UpdateEventArgs args = new UpdateEventArgs(m_selectedType, m_updateInfoValue, localServer, m_selectedProduct.Name);
 

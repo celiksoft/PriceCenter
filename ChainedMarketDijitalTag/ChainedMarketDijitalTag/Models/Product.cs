@@ -8,13 +8,13 @@ using System.ComponentModel;
 
 using ChainedMarketDijitalTag.Helpers;
 
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ChainedMarketDijitalTag.Models
 {
     public class Product : INotifyPropertyChanged
     {
-        private static int m_productCount = 0;
-        private readonly int m_id;
-        private readonly int m_marketId;
         private string m_eslName;
         private string m_localServer;
         private string m_marketBranch;
@@ -26,15 +26,12 @@ namespace ChainedMarketDijitalTag.Models
         private ObservableCollection<PriceUpdate> m_yearlyPrices;
         private ObservableCollection<PriceUpdate> m_historicalPrices;
         private Dictionary<DateTime, double> m_allPriceUpdates;
-        private List<PriceUpdate> m_priceHistory;
+        private ObservableCollection<PriceUpdate> m_priceHistory;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Product(int marketId, string eslName, string localServer)
+        public Product(string eslName, string localServer)
         {
-            ++m_productCount;
-            m_id = m_productCount;
-            m_marketId = marketId;
             m_eslName = eslName;
             m_localServer = localServer;
 
@@ -42,25 +39,7 @@ namespace ChainedMarketDijitalTag.Models
             m_yearlyPrices = new ObservableCollection<PriceUpdate>();
             m_historicalPrices = new ObservableCollection<PriceUpdate>();
             m_allPriceUpdates = new Dictionary<DateTime, double>();
-            m_priceHistory = new List<PriceUpdate>();
-
-            // add test price history
-            m_allPriceUpdates.Add(new DateTime(2013, 01, 10), 3.45);
-            m_allPriceUpdates.Add(new DateTime(2013, 01, 15), 2.45);
-            m_allPriceUpdates.Add(new DateTime(2013, 01, 20), 4.45);
-            m_allPriceUpdates.Add(new DateTime(2013, 06, 10), 6.45);
-            m_allPriceUpdates.Add(new DateTime(2013, 06, 20), 7.45);
-
-            m_allPriceUpdates.Add(new DateTime(2014, 03, 22), 6.75);
-
-            m_allPriceUpdates.Add(new DateTime(2015, 01, 10), 6.85);
-            m_allPriceUpdates.Add(new DateTime(2015, 02, 22), 5.75);
-            m_allPriceUpdates.Add(new DateTime(2015, 04, 20), 4.45);
-            m_allPriceUpdates.Add(new DateTime(2015, 05, 02), 4.95);
-
-            CurrentPrice = 4.95;
-
-            FillPriceHistory();
+            m_priceHistory = new ObservableCollection<PriceUpdate>();
 
         }
 
@@ -68,11 +47,22 @@ namespace ChainedMarketDijitalTag.Models
         {
         }
 
+        public ObjectId id { get; set; }
+
+        [BsonElementAttribute("name")]
         public string Name
         {
             get { return m_eslName; }
+            private set { m_eslName = value; }
         }
 
+        [BsonElementAttribute("localServer")]
+        public string LocalServer
+        {
+            get { return m_localServer; }
+        }
+
+        [BsonElementAttribute("price")]
         public double CurrentPrice
         {
             get { return m_currentPrice; }
@@ -82,6 +72,24 @@ namespace ChainedMarketDijitalTag.Models
             }
         }
 
+        [BsonElementAttribute("priceHistory")]
+        public ObservableCollection<PriceUpdate> PriceHistory
+        {
+            get { return m_priceHistory; }
+            set
+            {
+                if (m_priceHistory != value)
+                {
+                    m_priceHistory = value;
+                    OnPropertyChanged("PriceHistory");
+                    OnPropertyChanged("MonthlyPrices");
+                    OnPropertyChanged("YearlyPrices");
+                    OnPropertyChanged("HistoricalPrices");
+                }
+            }
+        }
+
+        [BsonElementAttribute("monthlyPrices")]
         public ObservableCollection<PriceUpdate> MonthlyPrices
         {
             get { return m_monthlyPrices; }
@@ -91,10 +99,13 @@ namespace ChainedMarketDijitalTag.Models
                 {
                     m_monthlyPrices = value;
                     OnPropertyChanged("MonthlyPrices");
+                    OnPropertyChanged("YearlyPrices");
+                    OnPropertyChanged("HistoricalPrices");
                 }
             }
         }
 
+        [BsonElementAttribute("yearlyPrices")]
         public ObservableCollection<PriceUpdate> YearlyPrices
         {
             get { return m_yearlyPrices; }
@@ -108,6 +119,7 @@ namespace ChainedMarketDijitalTag.Models
             }
         }
 
+        [BsonElementAttribute("historicalPrices")]
         public ObservableCollection<PriceUpdate> HistoricalPrices
         {
             get { return m_historicalPrices; }
@@ -121,7 +133,6 @@ namespace ChainedMarketDijitalTag.Models
             }
         }
 
-
         public void UpdatePrice(PriceUpdate updateRequest)
         {
             if (updateRequest.Price == CurrentPrice)
@@ -129,9 +140,10 @@ namespace ChainedMarketDijitalTag.Models
 
             DateTime now = DateTime.Now;
 
-            m_monthlyPrices.Add(updateRequest);
+            MonthlyPrices.Add(updateRequest);
 
             m_allPriceUpdates.Add(updateRequest.Date, updateRequest.Price);
+            PriceHistory.Add(updateRequest);
 
             YearlyPrices.ElementAt(now.Month - 1).Price = m_allPriceUpdates.Where(date => date.Key.Year == now.Year && date.Key.Month == now.Month).Average(value => value.Value);
             HistoricalPrices.Last().Price = m_allPriceUpdates.Where(date => date.Key.Year == now.Year).Average(value => value.Value);
@@ -139,80 +151,115 @@ namespace ChainedMarketDijitalTag.Models
             CurrentPrice = updateRequest.Price;
         }
 
-        public void UpdateImage(ImageType newImage)
+        public void UpdateImage(ImageUpdate updateRequest)
         {
 
         }
 
-        public void UpdateInfo(string newInfo)
+        public void UpdateInfo(InfoUpdate updateRequest)
         {
 
         }
 
-        private void FillPriceHistory()
+        public void FillPriceHistory()
         {
+            foreach (PriceUpdate update in PriceHistory)
+                m_allPriceUpdates.Add(update.Date, update.Price);
+
             if (m_allPriceUpdates != null && m_allPriceUpdates.Count != 0)
             {
                 List<int> years = new List<int>();
                 DateTime now = DateTime.Now;
 
-                foreach (DateTime oldDate in m_allPriceUpdates.Keys)
+                foreach (DateTime newDate in m_allPriceUpdates.Keys)
                 {
-                    if (!years.Contains(oldDate.Year))
+                    if (!years.Contains(newDate.Year))
                     {
                         // fill all yearly avg prices
-                        years.Add(oldDate.Year);
-                        double yearAvgPrice = m_allPriceUpdates.Where(date => date.Key.Year == oldDate.Year).Average(value => value.Value);
-                        HistoricalPrices.Add(new PriceUpdate(new DateTime(oldDate.Year, 1, 1), yearAvgPrice,"test"));
+                        years.Add(newDate.Year);
 
-                        // fill all months average prices
-                        if (now.Year == oldDate.Year)
+                        if (years.Count == 1)
+                        {
+                            double yearAvgPrice = m_allPriceUpdates.Where(date => date.Key.Year == newDate.Year).Average(value => value.Value);
+                            HistoricalPrices.Add(new PriceUpdate(new DateTime(newDate.Year, 1, 1), yearAvgPrice, "test"));
+                        }
+
+                        if (years.Count() >= 2)
+                        {
+                            // year is increment by 1
+                            double oldPriceLastYear = m_allPriceUpdates.Where(date => date.Key.Year == years.ElementAt(years.Count - 2)).Last().Value;
+
+                            Dictionary<DateTime, double> copyAll = new Dictionary<DateTime, double>(m_allPriceUpdates);
+                            copyAll.Add(new DateTime(newDate.Year, 1, 1), oldPriceLastYear);
+
+                            double yearAvgPrice = copyAll.Where(date => date.Key.Year == newDate.Year).Average(value => value.Value);
+                            HistoricalPrices.Add(new PriceUpdate(new DateTime(newDate.Year, 1, 1), yearAvgPrice, "test"));
+
+                            // if there is no update for a year
+                            int yearDif = newDate.Year - years.ElementAt(years.Count - 2);
+
+                            if (yearDif > 1)
+                            {
+                                double oldPrice = m_allPriceUpdates.Where(date => date.Key.Year == years.ElementAt(years.Count - 2)).Last().Value;
+
+                                for (int i = years.ElementAt(years.Count - 2) + 1; i < newDate.Year; ++i)
+                                    HistoricalPrices.Add(new PriceUpdate(new DateTime(i, 1, 1), oldPrice, "test"));
+                            }
+                        }
+
+                        // fill all months average prices for current year
+                        if (now.Year == newDate.Year)
                         {
                             double monthAvg = 0.0;
+
                             for (int i = 1; i <= now.Month; ++i)
                             {
-                                var temp = m_allPriceUpdates.Where(date => date.Key.Year == oldDate.Year && date.Key.Month == i);
+                                Dictionary<DateTime, double> copyAll = new Dictionary<DateTime, double>(m_allPriceUpdates);
+
+                                if (i == 1)
+                                {
+                                    double oldPriceLastYear = m_allPriceUpdates.Where(date => date.Key.Year == years.ElementAt(years.Count - 2)).Last().Value;
+                                    copyAll.Add(new DateTime(newDate.Year, 1, 1), oldPriceLastYear);
+                                }
+
+                                else
+                                {
+                                    double oldPriceLastMonth = m_allPriceUpdates.Where(date => date.Key.Year == now.Year && date.Key.Month == i - 1).Last().Value;
+                                    copyAll.Add(new DateTime(newDate.Year, i, 1), oldPriceLastMonth);
+                                }
+
+                                var temp = copyAll.Where(date => date.Key.Year == newDate.Year && date.Key.Month == i);
 
                                 if (temp.Count() > 0)
                                 {
                                     monthAvg = temp.Average(value => value.Value);
-                                    YearlyPrices.Add(new PriceUpdate(new DateTime(oldDate.Year, i, 1), monthAvg,"test"));
+                                    YearlyPrices.Add(new PriceUpdate(new DateTime(newDate.Year, i, 1), monthAvg, "test"));
                                 }
                                 else
                                 {
-                                    var lastChanges = m_allPriceUpdates.Where(date => date.Key.Year == oldDate.Year && date.Key.Month < i);
+                                    var lastChanges = m_allPriceUpdates.Where(date => date.Key.Year == newDate.Year && date.Key.Month < i);
                                     if (lastChanges.Count() > 0)
-                                        YearlyPrices.Add(new PriceUpdate(new DateTime(oldDate.Year, i, 1), lastChanges.Last().Value,"test"));
+                                    {
+                                        YearlyPrices.Add(new PriceUpdate(new DateTime(newDate.Year, i, 1), lastChanges.Last().Value, "test"));
+                                    }
                                 }
                             }
 
-                            // for days
+                            // for days in current month
                             var lastMonthChanges = m_allPriceUpdates.Where(date => date.Key.Year == now.Year && date.Key.Month < now.Month);
                             if (lastMonthChanges.Count() > 0)
-                                MonthlyPrices.Add(new PriceUpdate(new DateTime(now.Year, now.Month, 1), lastMonthChanges.Last().Value,"test"));
+                                MonthlyPrices.Add(new PriceUpdate(new DateTime(now.Year, now.Month, 1), lastMonthChanges.Last().Value, "test"));
 
                             var currentMonthPrices = m_allPriceUpdates.Where(date => date.Key.Year == now.Year && date.Key.Month == now.Month);
                             if (currentMonthPrices.Count() > 0)
                             {
                                 foreach (KeyValuePair<DateTime, double> pair in currentMonthPrices)
-                                    MonthlyPrices.Add(new PriceUpdate(new DateTime(pair.Key.Year, pair.Key.Month, pair.Key.Day), pair.Value,"test"));
+                                    MonthlyPrices.Add(new PriceUpdate(new DateTime(pair.Key.Year, pair.Key.Month, pair.Key.Day), pair.Value, "test"));
                             }
 
-                            MonthlyPrices.Add(new PriceUpdate(new DateTime(now.Year, now.Month, now.Day), CurrentPrice,"test"));
+                            MonthlyPrices.Add(new PriceUpdate(new DateTime(now.Year, now.Month, now.Day), currentMonthPrices.Last().Value, "test"));
                         }
                     }
-                }
-
-                years.Sort();
-                int lastYear = years.Last();
-
-                if (lastYear < now.Year)
-                {
-                    var lastChanges = m_allPriceUpdates.Where(date => date.Key.Year == lastYear);
-
-                    for (int i = lastYear + 1; i <= now.Year; ++i)
-                        HistoricalPrices.Add(new PriceUpdate(new DateTime(i, 1, 1), lastChanges.Last().Value,"test"));
-
                 }
             }
         }

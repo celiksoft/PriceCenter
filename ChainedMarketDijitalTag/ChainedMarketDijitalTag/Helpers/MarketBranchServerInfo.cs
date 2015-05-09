@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ChainedMarketDijitalTag.Helpers
 {
     public class MarketBranchServerInfo
@@ -15,12 +18,16 @@ namespace ChainedMarketDijitalTag.Helpers
             SocketNo = socketNo;
         }
 
+        public ObjectId id { get; set; }
+
+        [BsonElementAttribute("ip")]
         public IPAddress Ip
         {
             get;
             private set;
         }
 
+        [BsonElementAttribute("socket")]
         public int SocketNo
         {
             get;

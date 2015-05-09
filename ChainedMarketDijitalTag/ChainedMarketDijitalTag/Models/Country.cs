@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ChainedMarketDijitalTag.Models
 {
     public class Country
@@ -22,7 +25,12 @@ namespace ChainedMarketDijitalTag.Models
             Cities = new ObservableCollection<City>();
         }
 
+        public ObjectId id { get; set; }
+
+        [BsonElementAttribute("name")]
         public string Name { get; private set; }
+
+        [BsonElementAttribute("cities")]
         public ObservableCollection<City> Cities { get; private set; }
     }
 }

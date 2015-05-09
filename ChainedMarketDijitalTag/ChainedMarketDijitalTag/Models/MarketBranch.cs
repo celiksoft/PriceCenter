@@ -9,10 +9,13 @@ using System.Net;
 
 using ChainedMarketDijitalTag.Helpers;
 
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ChainedMarketDijitalTag.Models
 {
     public class MarketBranch
-    {   
+    {
         private static int m_marketCount = 0;
         private readonly int m_id;
         private string m_marketBranchLocation;
@@ -20,12 +23,10 @@ namespace ChainedMarketDijitalTag.Models
         private string m_city;
         private string m_subCity;
         private ObservableCollection<Product> m_products;
-        private MarketBranchServerInfo m_tcpSocketInfo;      
+        private MarketBranchServerInfo m_tcpSocketInfo;
 
-        public MarketBranch(string name,string country,string city,string subCity)
+        public MarketBranch(string name, string country, string city, string subCity)
         {
-            ++m_marketCount;
-            m_id = m_marketCount + 1;
             m_marketBranchLocation = name;
             m_country = country;
             m_city = city;
@@ -34,36 +35,44 @@ namespace ChainedMarketDijitalTag.Models
             m_tcpSocketInfo = new MarketBranchServerInfo(IPAddress.Parse("192.168.2.200"), 11000);
         }
 
+        public ObjectId id { get; set; }
+
+        [BsonElementAttribute("products")]
         public ObservableCollection<Product> Products
         {
             get { return m_products; }
+            private set { m_products = value; }
         }
 
+        [BsonElementAttribute("name")]
         public string Name
         {
             get { return m_marketBranchLocation; }
             private set { m_marketBranchLocation = value; }
         }
 
+        [BsonElementAttribute("country")]
         public string Country
         {
             get { return m_country; }
             private set { m_country = value; }
         }
 
+        [BsonElementAttribute("city")]
         public string City
         {
             get { return m_city; }
             private set { m_city = value; }
         }
 
+        [BsonElementAttribute("subcity")]
         public string SubCity
         {
             get { return m_subCity; }
             private set { m_subCity = value; }
         }
 
-
+        [BsonElementAttribute("tcpServiceInfo")]
         public MarketBranchServerInfo TcpServiceInfo
         {
             get { return m_tcpSocketInfo; }
