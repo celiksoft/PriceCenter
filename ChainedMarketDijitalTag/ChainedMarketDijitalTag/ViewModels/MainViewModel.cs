@@ -29,7 +29,7 @@ namespace ChainedMarketDijitalTag.ViewModels
     {
         private string m_appLogs;
         private string m_updateInfoLogs;
-        private string m_orderLogs;
+        private string m_otherLogs;
         private string m_validatedUserName;
 
         public MainViewModel()
@@ -45,6 +45,7 @@ namespace ChainedMarketDijitalTag.ViewModels
             //Product elma = new Product("ELMA", "MANAV");
             //Product kavurma = new Product("KAVURMA", "KASAP");
 
+            //// elma test prices
             //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 02, 20), 1.55, m_validatedUserName));
             //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 08, 20), 1.95, m_validatedUserName));
             //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 11, 20), 1.85, m_validatedUserName));
@@ -63,38 +64,64 @@ namespace ChainedMarketDijitalTag.ViewModels
             //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 04, 20), 2.25, m_validatedUserName));
             //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 05, 02), 2.55, m_validatedUserName));
 
-            //elma.FillPriceHistory();
+            //// kavurma test prices
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 02, 20), 51.55, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 08, 20), 53.95, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 11, 20), 55.85, m_validatedUserName));
+
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2013, 02, 20), 60.15, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2013, 08, 20), 58.35, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2013, 11, 20), 56.55, m_validatedUserName));
+
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2014, 02, 20), 63.45, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2014, 08, 20), 64.85, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2014, 11, 20), 65.95, m_validatedUserName));
+
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 01, 10), 70.00, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 02, 20), 71.85, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 03, 20), 75.45, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 04, 20), 73.25, m_validatedUserName));
+            //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 05, 02), 78.55, m_validatedUserName));
 
             //MarketBranch merkez = new MarketBranch("MERKEZ", "TÜRKİYE", "İSTANBUL", "PENDİK");
             //MarketBranch sahil = new MarketBranch("SAHIL", "TÜRKİYE", "BURSA", "YENİSEHİR");
             //MarketBranch schoolstreet = new MarketBranch("SCHOOLSTREET", "ALMANYA", "BERLİN", "HERTZ");
+            //MarketBranch carsi = new MarketBranch("CARSI", "TÜRKİYE", "ADIYAMAN", "MERKEZ");
 
             //merkez.Products.Add(elma);
-            ////sahil.Products.Add(kavurma);
-            ////sahil.Products.Add(elma);
-            ////schoolstreet.Products.Add(elma);
+            //merkez.Products.Add(kavurma);
+            //sahil.Products.Add(kavurma);
+            //sahil.Products.Add(elma);
+            //schoolstreet.Products.Add(elma);
+            //carsi.Products.Add(elma);
+            //carsi.Products.Add(kavurma);
 
             //SubCity yenisehir = new SubCity("YENISEHIR");
             //SubCity pendik = new SubCity("PENDİK");
             //SubCity hertz = new SubCity("HERTZ");
+            //SubCity adiMerkez = new SubCity("MERKEZ");
 
             //City bursa = new City("BURSA");
             //City istanbul = new City("İSTANBUL");
             //City berlin = new City("BERLİN");
+            //City adiyaman = new City("ADIYAMAN");
 
             //yenisehir.MarketBranches.Add(sahil);
             //pendik.MarketBranches.Add(merkez);
             //hertz.MarketBranches.Add(schoolstreet);
+            //adiMerkez.MarketBranches.Add(carsi);
 
             //bursa.SubCities.Add(yenisehir);
             //istanbul.SubCities.Add(pendik);
             //berlin.SubCities.Add(hertz);
+            //adiyaman.SubCities.Add(adiMerkez);
 
             //Country turkiye = new Country("TÜRKİYE");
             //Country almanya = new Country("ALMANYA");
 
             //turkiye.Cities.Add(bursa);
             //turkiye.Cities.Add(istanbul);
+            //turkiye.Cities.Add(adiyaman);
             //almanya.Cities.Add(berlin);
 
             //#endregion TestData
@@ -157,15 +184,15 @@ namespace ChainedMarketDijitalTag.ViewModels
             }
         }
 
-        public string OrderLogs
+        public string OtherLogs
         {
-            get { return m_orderLogs; }
+            get { return m_otherLogs; }
             set
             {
-                if (m_orderLogs != value)
+                if (m_otherLogs != value)
                 {
-                    m_orderLogs = value;
-                    OnPropertyChanged("OrderLogs");
+                    m_otherLogs = value;
+                    OnPropertyChanged("OtherLogs");
                 }
             }
         }
@@ -180,9 +207,9 @@ namespace ChainedMarketDijitalTag.ViewModels
             UpdateInfoLogs = m_updateInfoLogs + log + Environment.NewLine;
         }
 
-        private void addOrderLog(string log)
+        private void addOtherLog(string log)
         {
-            OrderLogs = m_orderLogs + log + Environment.NewLine;
+            OtherLogs = m_otherLogs + log + Environment.NewLine;
         }
 
         public void UpdateProductInfo()
@@ -194,14 +221,51 @@ namespace ChainedMarketDijitalTag.ViewModels
 
             // start a connection with market branch and wait request, Tcp client part
             AsynchronousClient tcpClient = new AsynchronousClient(m_selectedMarketBranch.TcpServiceInfo, args);
-            tcpClient.StartClient();
+            bool response = tcpClient.StartClient();
 
-            App.Current.Dispatcher.Invoke((Action)delegate
+            // according to response do smthg here 
+
+            if (!response)
             {
-                double price;
-                if (double.TryParse(m_updateInfoValue, out price))
-                    m_selectedProduct.UpdatePrice(new PriceUpdate(DateTime.Now,price,m_validatedUserName));
-            });
+                if (m_selectedType == UpdateType.Image)
+                {
+                    m_selectedProduct.UpdateImage(new ImageUpdate(DateTime.Now, args.NewValue, m_validatedUserName));
+                    addUpdateInfoLog(string.Format("Product Image is updated to -> {0}", args.NewValue));
+                }
+                else if (m_selectedType == UpdateType.Info)
+                {
+                    m_selectedProduct.UpdateInfo(new InfoUpdate(DateTime.Now, args.NewValue, m_validatedUserName));
+                    addUpdateInfoLog(string.Format("Product Info is updated to -> {0}", args.NewValue));
+                }
+                else if (m_selectedType == UpdateType.Price)
+                {
+                    App.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        double price;
+                        if (double.TryParse(m_updateInfoValue, out price))
+                            m_selectedProduct.UpdatePrice(new PriceUpdate(DateTime.Now, price, m_validatedUserName));
+                    });
+
+                    addUpdateInfoLog(string.Format("Product Price is updated to -> {0}", args.NewValue));
+                }
+            }
+            
+            // fail message
+            else
+            {
+                if (m_selectedType == UpdateType.Image)
+                {
+                    addUpdateInfoLog(string.Format("SORRY : Product Image is not updated, TRY AGAIN!"));
+                }
+                else if (m_selectedType == UpdateType.Info)
+                {
+                    addUpdateInfoLog(string.Format("SORRY : Product Info is not updated, TRY AGAIN!"));
+                }
+                else if (m_selectedType == UpdateType.Price)
+                {
+                    addUpdateInfoLog(string.Format("SORRY : Product Price is not updated, TRY AGAIN!"));
+                }
+            }
         }
 
         #region LoginVM
@@ -338,7 +402,7 @@ namespace ChainedMarketDijitalTag.ViewModels
         private Product m_selectedProduct;
         private string m_updateInfoValue;
         private UpdateEventArgs m_updateEventArgs;
-        private UpdateType m_selectedType;
+        private UpdateType m_selectedType = UpdateType.Unknown;
 
         public string UpdateInfoValue
         {
@@ -427,6 +491,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                 if (m_selectedCountry != value)
                 {
                     m_selectedCountry = value;
+                    Products.Clear();
                     OnPropertyChanged("SelectedCountry");
                     OnPropertyChanged("Cities");
                     OnPropertyChanged("SubCities");
@@ -445,6 +510,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                 if (m_selectedCity != value)
                 {
                     m_selectedCity = value;
+                    Products.Clear();
                     OnPropertyChanged("SelectedCity");
                     OnPropertyChanged("SubCities");
                     OnPropertyChanged("Products");
@@ -462,6 +528,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                 if (m_selectedSubCity != value)
                 {
                     m_selectedSubCity = value;
+                    Products.Clear();
                     OnPropertyChanged("SelectedSubCity");
                     OnPropertyChanged("MarketBranches");
                     OnPropertyChanged("Products");
@@ -469,7 +536,6 @@ namespace ChainedMarketDijitalTag.ViewModels
                 }
             }
         }
-
 
         public MarketBranch SelectedMarketBranch
         {
@@ -494,11 +560,14 @@ namespace ChainedMarketDijitalTag.ViewModels
                 if (m_selectedProduct != value)
                 {
                     m_selectedProduct = value;
+                    if (m_selectedProduct != null)
+                        m_selectedProduct.FillPriceHistory();
                     OnPropertyChanged("CanUpdate");
                     OnPropertyChanged("SelectedProduct");
                 }
             }
         }
+
         public UpdateType SelectedType
         {
             get { return m_selectedType; }
@@ -512,7 +581,6 @@ namespace ChainedMarketDijitalTag.ViewModels
                 }
             }
         }
-
 
         public UpdateType[] InfoTypes
         {

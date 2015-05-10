@@ -17,16 +17,17 @@ namespace ChainedMarketDijitalTag.Models
     {
         private string m_eslName;
         private string m_localServer;
-        private string m_marketBranch;
-        private string m_priceValue;
-        private string m_imageValue;
-        private string m_infoValue;
+        private string m_currentImage = "";
+        private string m_currentInfo = "";
         private double m_currentPrice = 0.0;
+
         private ObservableCollection<PriceUpdate> m_monthlyPrices;
         private ObservableCollection<PriceUpdate> m_yearlyPrices;
         private ObservableCollection<PriceUpdate> m_historicalPrices;
         private Dictionary<DateTime, double> m_allPriceUpdates;
         private ObservableCollection<PriceUpdate> m_priceHistory;
+        private ObservableCollection<ImageUpdate> m_imageHistory;
+        private ObservableCollection<InfoUpdate> m_infoHistory;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -40,7 +41,8 @@ namespace ChainedMarketDijitalTag.Models
             m_historicalPrices = new ObservableCollection<PriceUpdate>();
             m_allPriceUpdates = new Dictionary<DateTime, double>();
             m_priceHistory = new ObservableCollection<PriceUpdate>();
-
+            m_imageHistory = new ObservableCollection<ImageUpdate>();
+            m_infoHistory = new ObservableCollection<InfoUpdate>();
         }
 
         public Product()
@@ -72,6 +74,54 @@ namespace ChainedMarketDijitalTag.Models
             }
         }
 
+        [BsonElementAttribute("imageCur")]
+        public string CurrentImage
+        {
+            get { return m_currentImage; }
+            set
+            {
+                m_currentImage = value;
+            }
+        }
+
+        [BsonElementAttribute("infoCur")]
+        public string CurrentInfo
+        {
+            get { return m_currentInfo; }
+            set
+            {
+                m_currentInfo = value;
+            }
+        }
+
+        [BsonElementAttribute("imageHistory")]
+        public ObservableCollection<ImageUpdate> ImageHistory
+        {
+            get { return m_imageHistory; }
+            set
+            {
+                if (m_imageHistory != value)
+                {
+                    m_imageHistory = value;
+                    OnPropertyChanged("ImageHistory");
+                }
+            }
+        }
+
+        [BsonElementAttribute("infoHistory")]
+        public ObservableCollection<InfoUpdate> InfoHistory
+        {
+            get { return m_infoHistory; }
+            set
+            {
+                if (m_infoHistory != value)
+                {
+                    m_infoHistory = value;
+                    OnPropertyChanged("InfoHistory");
+                }
+            }
+        }
+
         [BsonElementAttribute("priceHistory")]
         public ObservableCollection<PriceUpdate> PriceHistory
         {
@@ -89,7 +139,6 @@ namespace ChainedMarketDijitalTag.Models
             }
         }
 
-        [BsonElementAttribute("monthlyPrices")]
         public ObservableCollection<PriceUpdate> MonthlyPrices
         {
             get { return m_monthlyPrices; }
@@ -105,7 +154,6 @@ namespace ChainedMarketDijitalTag.Models
             }
         }
 
-        [BsonElementAttribute("yearlyPrices")]
         public ObservableCollection<PriceUpdate> YearlyPrices
         {
             get { return m_yearlyPrices; }
@@ -119,7 +167,6 @@ namespace ChainedMarketDijitalTag.Models
             }
         }
 
-        [BsonElementAttribute("historicalPrices")]
         public ObservableCollection<PriceUpdate> HistoricalPrices
         {
             get { return m_historicalPrices; }
@@ -137,32 +184,37 @@ namespace ChainedMarketDijitalTag.Models
         {
             if (updateRequest.Price == CurrentPrice)
                 return;
-
-            DateTime now = DateTime.Now;
-
-            MonthlyPrices.Add(updateRequest);
-
-            m_allPriceUpdates.Add(updateRequest.Date, updateRequest.Price);
+            
             PriceHistory.Add(updateRequest);
 
-            YearlyPrices.ElementAt(now.Month - 1).Price = m_allPriceUpdates.Where(date => date.Key.Year == now.Year && date.Key.Month == now.Month).Average(value => value.Value);
-            HistoricalPrices.Last().Price = m_allPriceUpdates.Where(date => date.Key.Year == now.Year).Average(value => value.Value);
+            MonthlyPrices.Add(updateRequest);
+            HistoricalPrices.Last().Price = PriceHistory.Where(pu => pu.Date.Year == updateRequest.Date.Year).Average(value => value.Price);
+            YearlyPrices.ElementAt(updateRequest.Date.Month - 1).Price = PriceHistory.Where(pu => pu.Date.Year == updateRequest.Date.Year && pu.Date.Month == updateRequest.Date.Month).Average(value => value.Price);
 
             CurrentPrice = updateRequest.Price;
         }
 
         public void UpdateImage(ImageUpdate updateRequest)
         {
+            if (updateRequest.Image == CurrentImage)
+                return;
+
 
         }
 
         public void UpdateInfo(InfoUpdate updateRequest)
         {
-
+            if (updateRequest.Info == CurrentInfo)
+                return;
         }
 
         public void FillPriceHistory()
         {
+            m_allPriceUpdates = new Dictionary<DateTime, double>();
+            MonthlyPrices.Clear();
+            YearlyPrices.Clear();
+            HistoricalPrices.Clear();
+
             foreach (PriceUpdate update in PriceHistory)
                 m_allPriceUpdates.Add(update.Date, update.Price);
 

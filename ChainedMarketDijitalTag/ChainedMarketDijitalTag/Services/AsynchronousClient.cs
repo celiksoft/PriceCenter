@@ -31,7 +31,7 @@ namespace ChainedMarketDijitalTag.Services
             updateArgs = args;
         }
 
-        public void StartClient()
+        public bool StartClient()
         {
             // Connect to a remote device.
             try
@@ -67,8 +67,12 @@ namespace ChainedMarketDijitalTag.Services
             catch (Exception e)
             {
                 Msg.UpdateInfoLog.Publish("ERROR : A problem occured while connecting market server");
-                return;
+                return false;
             }
+
+            if (response == "FAILED")
+                return false;
+            return true;
         }
 
         private void ConnectCallback(IAsyncResult ar)

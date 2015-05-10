@@ -20,6 +20,7 @@ namespace ChainedMarketDijitalTag.Models
 
         public ObjectId id { get; set; }
 
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)] 
         [BsonElementAttribute("date")]
         public DateTime Date { get; set; }
 
