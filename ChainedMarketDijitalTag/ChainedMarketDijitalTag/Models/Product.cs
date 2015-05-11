@@ -199,13 +199,25 @@ namespace ChainedMarketDijitalTag.Models
             if (updateRequest.Image == CurrentImage)
                 return;
 
+            if (m_imageHistory == null)
+                m_imageHistory = new ObservableCollection<ImageUpdate>();
 
+            ImageHistory.Add(updateRequest);
+
+            CurrentImage = updateRequest.Image;
         }
 
         public void UpdateInfo(InfoUpdate updateRequest)
         {
             if (updateRequest.Info == CurrentInfo)
                 return;
+
+            if (m_infoHistory == null)
+                m_infoHistory = new ObservableCollection<InfoUpdate>();
+
+            InfoHistory.Add(updateRequest);
+
+            CurrentInfo = updateRequest.Info;
         }
 
         public void FillPriceHistory()

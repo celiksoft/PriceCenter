@@ -22,6 +22,7 @@ using SoftArcs.WPFSmartLibrary.SmartUserControls;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Shared;
+using MongoDB.Driver.Builders;
 
 namespace ChainedMarketDijitalTag.ViewModels
 {
@@ -231,11 +232,41 @@ namespace ChainedMarketDijitalTag.ViewModels
                 {
                     m_selectedProduct.UpdateImage(new ImageUpdate(DateTime.Now, args.NewValue, m_validatedUserName));
                     addUpdateInfoLog(string.Format("Product Image is updated to -> {0}", args.NewValue));
+
+                    // update db records
+                    // connect to database to update product informations
+                    MongoServerSettings settings = new MongoServerSettings();
+                    MongoServer server = new MongoServer(settings);
+                    server.Connect();
+
+                    MongoDatabase db = server.GetDatabase("DigitalPriceCenter");
+
+                    var countries = db.GetCollection("Countries");
+
+                    countries.Save<Country>(m_selectedCountry);
+
+                    server.Disconnect();
+
                 }
                 else if (m_selectedType == UpdateType.Info)
                 {
                     m_selectedProduct.UpdateInfo(new InfoUpdate(DateTime.Now, args.NewValue, m_validatedUserName));
                     addUpdateInfoLog(string.Format("Product Info is updated to -> {0}", args.NewValue));
+
+                    // update db records
+                    // connect to database to update product informations
+                    MongoServerSettings settings = new MongoServerSettings();
+                    MongoServer server = new MongoServer(settings);
+                    server.Connect();
+
+                    MongoDatabase db = server.GetDatabase("DigitalPriceCenter");
+
+                    var countries = db.GetCollection("Countries");
+
+                    countries.Save<Country>(m_selectedCountry);
+
+                    server.Disconnect();
+
                 }
                 else if (m_selectedType == UpdateType.Price)
                 {
@@ -247,6 +278,20 @@ namespace ChainedMarketDijitalTag.ViewModels
                     });
 
                     addUpdateInfoLog(string.Format("Product Price is updated to -> {0}", args.NewValue));
+
+                    // update db records
+                    // connect to database to update product informations
+                    MongoServerSettings settings = new MongoServerSettings();
+                    MongoServer server = new MongoServer(settings);
+                    server.Connect();
+
+                    MongoDatabase db = server.GetDatabase("DigitalPriceCenter");
+
+                    var countries = db.GetCollection("Countries");
+
+                    countries.Save<Country>(m_selectedCountry);
+
+                    server.Disconnect();
                 }
             }
             
