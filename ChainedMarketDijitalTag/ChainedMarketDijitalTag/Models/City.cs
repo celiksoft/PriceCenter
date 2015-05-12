@@ -27,7 +27,7 @@ namespace ChainedMarketDijitalTag.Models
 
         public ObjectId id { get; set; }
 
-        [BsonElementAttribute("name")]
+        [BsonElementAttribute("cityName")]
         public string Name { get; private set; }
 
         [BsonElementAttribute("subcities")]

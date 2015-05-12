@@ -44,39 +44,35 @@ namespace ChainedMarketDijitalTag.Models
             private set { m_products = value; }
         }
 
-        [BsonElementAttribute("name")]
+        [BsonElementAttribute("tcpServiceInfo")]
+        public MarketBranchServerInfo TcpServiceInfo
+        {
+            get { return m_tcpSocketInfo; }
+            private set { m_tcpSocketInfo = value; }
+        }
+
         public string Name
         {
             get { return m_marketBranchLocation; }
             private set { m_marketBranchLocation = value; }
         }
 
-        [BsonElementAttribute("country")]
         public string Country
         {
             get { return m_country; }
             private set { m_country = value; }
         }
 
-        [BsonElementAttribute("city")]
         public string City
         {
             get { return m_city; }
             private set { m_city = value; }
         }
 
-        [BsonElementAttribute("subcity")]
         public string SubCity
         {
             get { return m_subCity; }
             private set { m_subCity = value; }
-        }
-
-        [BsonElementAttribute("tcpServiceInfo")]
-        public MarketBranchServerInfo TcpServiceInfo
-        {
-            get { return m_tcpSocketInfo; }
-            private set { m_tcpSocketInfo = value; }
         }
     }
 }
