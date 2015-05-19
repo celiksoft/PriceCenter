@@ -17,8 +17,8 @@ namespace ChainedMarketDijitalTag.Models
     {
         private string m_eslName;
         private string m_localServer;
-        private string m_currentImage = "";
-        private string m_currentInfo = "";
+        private string m_currentImage = "secilmedi";
+        private string m_currentInfo = "secilmedi";
         private double m_currentPrice = 0.0;
 
         private ObservableCollection<PriceUpdate> m_monthlyPrices;
@@ -68,7 +68,10 @@ namespace ChainedMarketDijitalTag.Models
         [BsonElementAttribute("price")]
         public double CurrentPrice
         {
-            get { return m_currentPrice; }
+            get
+            {
+                return m_currentPrice;
+            }
             set
             {
                 m_currentPrice = value;
@@ -185,7 +188,7 @@ namespace ChainedMarketDijitalTag.Models
         {
             if (updateRequest.Price == CurrentPrice)
                 return;
-            
+
             PriceHistory.Add(updateRequest);
 
             MonthlyPrices.Add(updateRequest);
@@ -227,6 +230,7 @@ namespace ChainedMarketDijitalTag.Models
             MonthlyPrices.Clear();
             YearlyPrices.Clear();
             HistoricalPrices.Clear();
+            CurrentPrice = PriceHistory.Last().Price;
 
             foreach (PriceUpdate update in PriceHistory)
                 m_allPriceUpdates.Add(update.Date, update.Price);

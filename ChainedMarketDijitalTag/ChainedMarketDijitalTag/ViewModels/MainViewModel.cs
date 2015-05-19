@@ -30,7 +30,8 @@ namespace ChainedMarketDijitalTag.ViewModels
     {
         private string m_appLogs;
         private string m_updateInfoLogs;
-        private string m_otherLogs;
+        private string m_lastUpdates;
+        private string m_marketOperations;
         private string m_validatedUserName;
 
         public MainViewModel()
@@ -172,6 +173,19 @@ namespace ChainedMarketDijitalTag.ViewModels
             }
         }
 
+        public string MarketOperations
+        {
+            get { return m_marketOperations; }
+            set
+            {
+                if (m_marketOperations != value)
+                {
+                    m_marketOperations = value;
+                    OnPropertyChanged("MarketOperations");
+                }
+            }
+        }
+
         public string UpdateInfoLogs
         {
             get { return m_updateInfoLogs; }
@@ -185,15 +199,15 @@ namespace ChainedMarketDijitalTag.ViewModels
             }
         }
 
-        public string OtherLogs
+        public string LastUpdates
         {
-            get { return m_otherLogs; }
+            get { return m_lastUpdates; }
             set
             {
-                if (m_otherLogs != value)
+                if (m_lastUpdates != value)
                 {
-                    m_otherLogs = value;
-                    OnPropertyChanged("OtherLogs");
+                    m_lastUpdates = value;
+                    OnPropertyChanged("LastUpdates");
                 }
             }
         }
@@ -208,13 +222,35 @@ namespace ChainedMarketDijitalTag.ViewModels
             UpdateInfoLogs = m_updateInfoLogs + log + Environment.NewLine;
         }
 
-        private void addOtherLog(string log)
+        private void addLastUpdate(string log)
         {
-            OtherLogs = m_otherLogs + log + Environment.NewLine;
+            LastUpdates = m_lastUpdates + log + Environment.NewLine;
+        }
+
+        private void addMarketOperation(string log)
+        {
+            MarketOperations = m_marketOperations + log + Environment.NewLine;
+        }
+
+        private void ClearMarketOperations()
+        {
+            MarketOperations = "";
+        }
+
+        private void ClearUpdateInfoLog()
+        {
+            UpdateInfoLogs = "";
+        }
+
+        private void ClearLastUpdateLog()
+        {
+            LastUpdates = "";
         }
 
         public void UpdateProductInfo()
         {
+            ClearUpdateInfoLog();
+
             // evaluete local server from db
             string localServer = m_selectedProduct.LocalServer;
 
@@ -294,7 +330,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                     server.Disconnect();
                 }
             }
-            
+
             // fail message
             else
             {
@@ -593,6 +629,9 @@ namespace ChainedMarketDijitalTag.ViewModels
                     OnPropertyChanged("SelectedMarketBranch");
                     OnPropertyChanged("CanUpdate");
                     OnPropertyChanged("Products");
+                    ClearMarketOperations();
+                    if (m_selectedMarketBranch != null)
+                        addMarketOperation(String.Format("Seçili sube : {0}", m_selectedMarketBranch.Name));
                 }
             }
         }
@@ -609,6 +648,32 @@ namespace ChainedMarketDijitalTag.ViewModels
                         m_selectedProduct.FillPriceHistory();
                     OnPropertyChanged("CanUpdate");
                     OnPropertyChanged("SelectedProduct");
+
+                    ClearMarketOperations();
+                    ClearLastUpdateLog();
+
+                    if (m_selectedMarketBranch != null && m_selectedProduct != null)
+                    {
+                        addMarketOperation(String.Format("Seçili sube : {0}", m_selectedMarketBranch.Name));
+                        addMarketOperation(String.Format("Seçili ürün : {0}", m_selectedProduct.Name));
+                        addMarketOperation(String.Format("\nSeçili ürün bilgileri : \n------------------------ "));
+                        addMarketOperation(String.Format("Güncel fiyat : {0}", m_selectedProduct.CurrentPrice));
+                        addMarketOperation(String.Format("Güncel resim : {0}", m_selectedProduct.CurrentImage));
+                        addMarketOperation(String.Format("Güncel bilgi : {0}", m_selectedProduct.CurrentInfo));
+
+                        int count = m_selectedProduct.PriceHistory.Count;
+                        int limit = 10;
+                        if (count < 10)
+                            limit = count;
+
+                        for (int i = 1; i <= limit; ++i)
+                        {
+                            PriceUpdate update = m_selectedProduct.PriceHistory[count - i];
+                            addLastUpdate(String.Format("Kullanıcı : {0} \t Tarih : {1} \t Fiyat : {2}", update.UserName, update.Date, update.Price));
+                        }
+                    }
+                    
+
                 }
             }
         }

@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            
+        <TextBox Grid.Column="0" Grid.Row="2" Text="{Binding MarketOperations}" IsReadOnly="True" Margin="2" ScrollViewer.VerticalScrollBarVisibility="Auto" />
     </Grid>
 </UserControl>
