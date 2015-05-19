@@ -32,9 +32,9 @@ namespace ChainedMarketDijitalTag.Models
             m_city = city;
             m_subCity = subCity;
             m_products = new ObservableCollection<Product>();
-            m_tcpSocketInfo = new MarketBranchServerInfo(IPAddress.Parse("192.168.2.200"), 11000);
+            m_tcpSocketInfo = new MarketBranchServerInfo(IPAddress.Parse("127.0.0.1"), 11000);
         }
-
+        
         public ObjectId id { get; set; }
 
         [BsonElementAttribute("products")]

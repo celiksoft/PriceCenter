@@ -226,7 +226,7 @@ namespace ChainedMarketDijitalTag.ViewModels
 
             // according to response do smthg here 
 
-            if (!response)
+            if (response)
             {
                 if (m_selectedType == UpdateType.Image)
                 {
@@ -536,7 +536,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                 if (m_selectedCountry != value)
                 {
                     m_selectedCountry = value;
-                    Products.Clear();
+                    //Products.Clear();
                     OnPropertyChanged("SelectedCountry");
                     OnPropertyChanged("Cities");
                     OnPropertyChanged("SubCities");
@@ -555,7 +555,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                 if (m_selectedCity != value)
                 {
                     m_selectedCity = value;
-                    Products.Clear();
+                    //Products.Clear();
                     OnPropertyChanged("SelectedCity");
                     OnPropertyChanged("SubCities");
                     OnPropertyChanged("Products");
@@ -573,7 +573,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                 if (m_selectedSubCity != value)
                 {
                     m_selectedSubCity = value;
-                    Products.Clear();
+                    //Products.Clear();
                     OnPropertyChanged("SelectedSubCity");
                     OnPropertyChanged("MarketBranches");
                     OnPropertyChanged("Products");

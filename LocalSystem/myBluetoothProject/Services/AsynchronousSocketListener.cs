@@ -75,11 +75,13 @@ namespace myBluetoothProject.Services
                 if (candidateDevices.Count() <= 0)
                 {
                     Msg.AppLog.Publish(String.Format("There is no local server named: {0}, try again!", args.LocalServer));
+                    Send(args.TcpSocket, "FAILED");
                     return;
                 }
                 else if (candidateDevices.Count() > 1)
                 {
                     Msg.AppLog.Publish("There were too many devices have same name, check it again");
+                    Send(args.TcpSocket, "FAILED");
                     return;
                 }
 
@@ -107,11 +109,15 @@ namespace myBluetoothProject.Services
                 else
                 {
                     Msg.AppLog.Publish(string.Format("Info can not updated , Local server is not ready ,TRY AGAIN!" + Environment.NewLine));
+                    Send(args.TcpSocket, "FAILED");
+                    return;
                 }
             }
             catch (Exception ex)
             {
                 Msg.AppLog.Publish("A problem occured connecting to local server. Details: " + ex.Message);
+                Send(args.TcpSocket, "FAILED");
+                return;
             }
         }
 
@@ -195,6 +201,7 @@ namespace myBluetoothProject.Services
                     ServerRunning = false;
                     conn.Close();
                     BTListener.Stop();
+                    Send(args.TcpSocket, "FAILED");
                     Msg.AppLog.Publish("A problem occured, Details: " + ex.Message);
                 }
             }

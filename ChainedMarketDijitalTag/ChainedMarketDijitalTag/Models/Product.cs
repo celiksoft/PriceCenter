@@ -62,6 +62,7 @@ namespace ChainedMarketDijitalTag.Models
         public string LocalServer
         {
             get { return m_localServer; }
+            private set { m_localServer = value; }
         }
 
         [BsonElementAttribute("price")]
