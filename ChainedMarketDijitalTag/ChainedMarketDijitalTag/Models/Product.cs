@@ -326,7 +326,8 @@ namespace ChainedMarketDijitalTag.Models
                                     MonthlyPrices.Add(new PriceUpdate(new DateTime(pair.Key.Year, pair.Key.Month, pair.Key.Day), pair.Value, "test"));
                             }
 
-                            MonthlyPrices.Add(new PriceUpdate(new DateTime(now.Year, now.Month, now.Day), currentMonthPrices.Last().Value, "test"));
+                            if(currentMonthPrices.Count() > 0)
+                                MonthlyPrices.Add(new PriceUpdate(new DateTime(now.Year, now.Month, now.Day), currentMonthPrices.Last().Value, "test"));
                         }
                     }
                 }

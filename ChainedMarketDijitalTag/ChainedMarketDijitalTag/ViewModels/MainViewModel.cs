@@ -23,6 +23,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Shared;
 using MongoDB.Driver.Builders;
+using System.Globalization;
 
 namespace ChainedMarketDijitalTag.ViewModels
 {
@@ -154,6 +155,8 @@ namespace ChainedMarketDijitalTag.ViewModels
             addAppLog("Price manager is ready to serve");
 
             Messenger<Msg>.Default.AddHandler<string>(Msg.UpdateInfoLog, addUpdateInfoLog);
+
+            //ExportCsv();
         }
 
         public void Initialize()
@@ -347,6 +350,43 @@ namespace ChainedMarketDijitalTag.ViewModels
                     addUpdateInfoLog(string.Format("SORRY : Product Price is not updated, TRY AGAIN!"));
                 }
             }
+        }
+
+        // export price history to a .csv file
+        private void ExportCsv()
+        {
+            FileStream csvFile = File.Create(String.Format("PriceHistory_{0}.{1}.{2}", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year));
+
+            var csvContent = new StringBuilder();
+            foreach (Country country in m_contries)
+            {
+                foreach (City city in country.Cities)
+                {
+                    foreach (SubCity subCity in city.SubCities)
+                    {
+                        foreach (MarketBranch marketBranch in subCity.MarketBranches)
+                        {
+                            foreach (Product product in marketBranch.Products)
+                            {
+                                foreach (PriceUpdate priceUpdate in product.PriceHistory)
+                                {   
+                                    var date = String.Format("{0}/{1}/{2}",priceUpdate.Date.Day,priceUpdate.Date.Month,priceUpdate.Date.Year);
+
+                                    var price = priceUpdate.Price.ToString("0.00", new CultureInfo("en-US", false));
+
+                                    var newLine = String.Format("{0},{1},{2},{3},{4},{5},{6}{7}", country.Name, city.Name, subCity.Name, marketBranch.Name, product.Name, date, price, Environment.NewLine);
+                                    csvContent.Append(newLine);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            path += @"\" + String.Format("PriceHistory_{0}.{1}.{2}.csv", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year);
+
+            File.WriteAllText(path, csvContent.ToString());
         }
 
         #region LoginVM
