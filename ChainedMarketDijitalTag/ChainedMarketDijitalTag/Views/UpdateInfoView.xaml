@@ -50,6 +50,18 @@
                 </i:Interaction.Triggers>
             </Button>
 
+            <Control Tag="PlaceHolder" />
+            <Button  Background="Orange" Foreground="AliceBlue" Width="70" Height="30" >
+                <Button.Content>
+                    <TextBlock Margin="2" FontSize="8"> EXPORT DATA </TextBlock>
+                </Button.Content>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <ei:CallMethodAction TargetObject="{Binding}" MethodName="ExportCsv" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
         </UniformGrid>
 
         <!--<UniformGrid Columns="2">

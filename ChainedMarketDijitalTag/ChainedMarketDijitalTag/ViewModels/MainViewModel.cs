@@ -353,9 +353,18 @@ namespace ChainedMarketDijitalTag.ViewModels
         }
 
         // export price history to a .csv file
-        private void ExportCsv()
+        public void ExportCsv()
         {
-            FileStream csvFile = File.Create(String.Format("PriceHistory_{0}.{1}.{2}", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year));
+            FileStream csvFile;
+
+            try
+            {
+                csvFile = File.Create(String.Format("PriceHistory_{0}.{1}.{2}", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year));
+            }
+            catch (Exception ex)
+            {
+                
+            }
 
             var csvContent = new StringBuilder();
             foreach (Country country in m_contries)
@@ -369,8 +378,8 @@ namespace ChainedMarketDijitalTag.ViewModels
                             foreach (Product product in marketBranch.Products)
                             {
                                 foreach (PriceUpdate priceUpdate in product.PriceHistory)
-                                {   
-                                    var date = String.Format("{0}/{1}/{2}",priceUpdate.Date.Day,priceUpdate.Date.Month,priceUpdate.Date.Year);
+                                {
+                                    var date = String.Format("{0}/{1}/{2}", priceUpdate.Date.Day, priceUpdate.Date.Month, priceUpdate.Date.Year);
 
                                     var price = priceUpdate.Price.ToString("0.00", new CultureInfo("en-US", false));
 
@@ -382,7 +391,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                     }
                 }
             }
-            
+
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             path += @"\" + String.Format("PriceHistory_{0}.{1}.{2}.csv", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year);
 
@@ -712,7 +721,7 @@ namespace ChainedMarketDijitalTag.ViewModels
                             addLastUpdate(String.Format("Kullanıcı : {0} \t Tarih : {1} \t Fiyat : {2}", update.UserName, update.Date, update.Price));
                         }
                     }
-                    
+
 
                 }
             }
