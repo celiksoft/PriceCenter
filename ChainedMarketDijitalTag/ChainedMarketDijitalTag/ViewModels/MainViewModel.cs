@@ -46,6 +46,7 @@ namespace ChainedMarketDijitalTag.ViewModels
 
             //#region TestData
             //Product elma = new Product("ELMA", "MANAV");
+            //Product kiraz = new Product("KIRAZ", "MANAV");
             //Product kavurma = new Product("KAVURMA", "KASAP");
 
             //// elma test prices
@@ -66,6 +67,24 @@ namespace ChainedMarketDijitalTag.ViewModels
             //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 03, 20), 2.45, m_validatedUserName));
             //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 04, 20), 2.25, m_validatedUserName));
             //elma.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 05, 02), 2.55, m_validatedUserName));
+
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 02, 20), 1.55, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 08, 20), 1.95, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 11, 20), 1.85, m_validatedUserName));
+
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2013, 02, 20), 2.15, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2013, 08, 20), 2.35, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2013, 11, 20), 2.55, m_validatedUserName));
+
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2014, 02, 20), 2.45, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2014, 08, 20), 2.85, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2014, 11, 20), 2.95, m_validatedUserName));
+
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 01, 10), 3.00, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 02, 20), 2.85, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 03, 20), 2.45, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 04, 20), 2.25, m_validatedUserName));
+            //kiraz.PriceHistory.Add(new PriceUpdate(new DateTime(2015, 05, 02), 2.55, m_validatedUserName));
 
             //// kavurma test prices
             //kavurma.PriceHistory.Add(new PriceUpdate(new DateTime(2012, 02, 20), 51.55, m_validatedUserName));
@@ -93,10 +112,18 @@ namespace ChainedMarketDijitalTag.ViewModels
 
             //merkez.Products.Add(elma);
             //merkez.Products.Add(kavurma);
+            //merkez.Products.Add(kiraz);
+
             //sahil.Products.Add(kavurma);
             //sahil.Products.Add(elma);
+            //sahil.Products.Add(kiraz);
+
             //schoolstreet.Products.Add(elma);
+            //schoolstreet.Products.Add(kiraz);
+            //schoolstreet.Products.Add(kavurma);
+
             //carsi.Products.Add(elma);
+            //carsi.Products.Add(kiraz);
             //carsi.Products.Add(kavurma);
 
             //SubCity yenisehir = new SubCity("YENISEHIR");
@@ -155,8 +182,6 @@ namespace ChainedMarketDijitalTag.ViewModels
             addAppLog("Price manager is ready to serve");
 
             Messenger<Msg>.Default.AddHandler<string>(Msg.UpdateInfoLog, addUpdateInfoLog);
-
-            //ExportCsv();
         }
 
         public void Initialize()
